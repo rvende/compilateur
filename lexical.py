@@ -45,6 +45,36 @@ def tokens(c):
     elif c == "-":
         les_tokens.append({'type':'tok_moins', "ligne": num_lig})
         num_lettre += 1
+    elif c == "*":
+        les_tokens.append({'type':'tok_multiplication', "ligne": num_lig})
+        num_lettre += 1
+    elif c == "/":
+        les_tokens.append({'type':'tok_division', "ligne": num_lig})
+        num_lettre += 1
+    elif c == "%":
+        les_tokens.append({'type':'tok_modulo', "ligne": num_lig})
+        num_lettre += 1
+    elif c == "^":
+        les_tokens.append({'type':'tok_modulo', "ligne": num_lig})
+        num_lettre += 1
+    elif c == "!":
+        if content[num_lettre+1] == "=":
+            les_tokens.append({'type':'tok_different', "ligne": num_lig})
+            num_lettre += 2
+    elif c == "<":
+        if content[num_lettre+1] == "=":
+            les_tokens.append({'type':'tok_inferieur_egal', "ligne": num_lig})
+            num_lettre += 2
+        else:
+            les_tokens.append({'type':'tok_inferieur', "ligne": num_lig})
+            num_lettre += 1
+    elif c == ">":
+        if content[num_lettre+1] == "=":
+            les_tokens.append({'type':'tok_superieur_egal', "ligne": num_lig})
+            num_lettre += 2
+        else:
+            les_tokens.append({'type':'tok_superieur', "ligne": num_lig})
+            num_lettre += 1
     elif c == "=":
         if content[num_lettre+1] == "=":
             les_tokens.append({'type':'tok_egal', "ligne": num_lig})
@@ -65,6 +95,9 @@ def tokens(c):
         les_tokens.append({'type':'tok_accolade_fermante', "ligne": num_lig})
         num_lettre += 1
     elif c == ";":
+        les_tokens.append({'type':'tok_point_virgule', "ligne": num_lig})
+        num_lettre += 1
+    elif c == ",":
         les_tokens.append({'type':'tok_point_virgule', "ligne": num_lig})
         num_lettre += 1
     elif c.isdigit():
