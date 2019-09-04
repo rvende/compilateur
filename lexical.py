@@ -17,6 +17,12 @@ def next():
 def skip():
     global index_token
     index_token = index_token + 1
+    
+def accept(t):
+    if(next()['type'] == t)
+        skip();
+    else
+        print "Erreur"
 
 def main():
     global num_lettre
