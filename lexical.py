@@ -55,7 +55,7 @@ def tokens(c):
         les_tokens.append({'type':'tok_modulo', "ligne": num_lig})
         num_lettre += 1
     elif c == "^":
-        les_tokens.append({'type':'tok_modulo', "ligne": num_lig})
+        les_tokens.append({'type':'tok_puissance', "ligne": num_lig})
         num_lettre += 1
     elif c == "!":
         if content[num_lettre+1] == "=":
@@ -98,7 +98,7 @@ def tokens(c):
         les_tokens.append({'type':'tok_point_virgule', "ligne": num_lig})
         num_lettre += 1
     elif c == ",":
-        les_tokens.append({'type':'tok_point_virgule', "ligne": num_lig})
+        les_tokens.append({'type':'tok_virgule', "ligne": num_lig})
         num_lettre += 1
     elif c.isdigit():
         i = num_lettre+1
