@@ -3,27 +3,25 @@ from arbre import *
 
 def expression(p):
     pass
-    
-def primaire():
-    if(next() is None):
-        skip()
-    if(next()['type'] == "tok_constante"):
-        A = arbre('noeud_constante', next()['valeur'])
-        skip()
+
+def primaire(lexical):
+    print(lexical.next())
+    lexical.index_token = 0
+    if(lexical.next() is None):
+        lexical.skip()
+    if(lexical.next()['type'] == "tok_constante"):
+        A = arbre('noeud_constante', lexical.next()['valeur'])
+        lexical.skip()
         return A
-    if(next()['type'] == "tok_parenthese_ouvrante"):
-        skip()
-        #A = expression(0)
-        accept("tok_parenthese_fermante")
+    if(lexical.next()['type'] == "tok_parenthese_ouvrante"):
+        lexical.skip()
+        A = expression(0)
+        lexical.accept("tok_parenthese_fermante")
+        return A
     #Opération unaire
-    if(next()['type'] == "tok_moins"):
-        skip()
+    if(lexical.next()['type'] == "tok_moins"):
+        lexical.skip()
         A = arbre("noeud_moins_unaire")
         #A.ajouterFils(expression(7))
         return A
     print("Erreur: Primaire attendu")
-
-if __name__ == "__main__":
-    pass
-        
-        
