@@ -1,0 +1,8 @@
+Version: Python3
+Commande de lancement: python3 lexical.py NomDeFichier
+
+Fonctionnalités inclusent:
+- Traitement des lignes présentent dans un fichier
+- Identification des tokens
+- Traitement des primaires
+- Traitement des expressions : +, -, *, /, %, ^

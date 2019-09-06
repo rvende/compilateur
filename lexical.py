@@ -1,7 +1,9 @@
+import sys
+
 from syntax import *
 
 class lexical():
-    """docstring forlexical."""
+    
     def __init__(self, fichier):
         self.fichier = open(fichier,"r")
         self.les_tokens = []
@@ -37,10 +39,7 @@ class lexical():
         while(True):
             if self.next() != None:
                 if self.next()['type'] == "tok_EOF":
-                    for elem in self.les_tokens:
-                        print(elem['type'])
                     break
-            print(self.num_lettre)
             if self.num_lettre < len(self.content):
                 if self.content[self.num_lettre] != " " and self.content[self.num_lettre] != "\n":
                     self.tokens(self.content[self.num_lettre])
@@ -117,6 +116,12 @@ class lexical():
         elif c == ",":
             self.les_tokens.append({'type':'tok_virgule', "ligne": self.num_lig})
             self.num_lettre += 1
+        elif c == "&":
+            self.les_tokens.append({'type':'tok_et', "ligne": self.num_lig})
+            self.num_lettre += 1
+        elif c == "|":
+            self.les_tokens.append({'type':'tok_ou', "ligne": self.num_lig})
+            self.num_lettre += 1
         elif c.isdigit():
             i = self.num_lettre+1
             if i < len(self.content):
@@ -144,7 +149,7 @@ class lexical():
 
 
 if __name__ == '__main__':
-    l = lexical("test.c")
+    l = lexical(sys.argv[1])
     l.main()
     print(l.les_tokens)
-    # print(primaire(l).afficher())
+    expression(0,l).afficher()

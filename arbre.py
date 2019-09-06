@@ -8,11 +8,12 @@ class arbre:
     def ajouterFils(self, arbre):
         self.fils.append(arbre)
 
-    def afficher(self, niveau = 1):
-        res = ""
+    def afficher(self, niveau = 0):
+        #res = ""
         for i in range(niveau):
-            print("\t")
-        print(self.type)
+            print("\t", end = '')
+        print(self.type + ": " + str(self.valeur))
         for elem in self.fils:
-            res += elem.afficher(niveau + 1)
-        return res
+            #res += elem.afficher(niveau + 1)
+            elem.afficher(niveau + 1)
+        #return res
