@@ -28,8 +28,8 @@ def expression(p, lexical):
 
 
 def primaire(lexical):
-    if(lexical.index_token+1 == len(lexical.les_tokens)):
-        lexical.index_token = 0
+    # if(lexical.index_token+1 == len(lexical.les_tokens)):
+    #     lexical.index_token = 0
     if(lexical.next() is None):
         lexical.skip()
     if(lexical.next()['type'] == "tok_constante"):
@@ -45,8 +45,6 @@ def primaire(lexical):
     if(lexical.next()['type'] == "tok_moins"):
         lexical.skip()
         A = arbre("noeud_moins_unaire")
-        # TODO
-        # A remodifier
-        A.ajouterFils(expression(3, lexical))
+        A.ajouterFils(expression(tableauPriorite['tok_puissance']['priorite'], lexical))
         return A
-    print("Erreur: Primaire attendu")
+    raise Exception("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
