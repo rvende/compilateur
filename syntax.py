@@ -47,4 +47,9 @@ def primaire(lexical):
         A = arbre("noeud_moins_unaire")
         A.ajouterFils(expression(tableauPriorite['tok_puissance']['priorite'], lexical))
         return A
+    if(lexical.next()['type'] == "tok_plus"):
+        lexical.skip()
+        A = arbre("noeud_plus_unaire")
+        A.ajouterFils(expression(tableauPriorite['tok_puissance']['priorite'], lexical))
+        return A
     raise Exception("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
