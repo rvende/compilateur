@@ -6,3 +6,5 @@ Fonctionnalités inclusent:
 - Identification des tokens
 - Traitement des primaires
 - Traitement des expressions : +, -, *, /, %, ^
+
+Pour lancer les tests unitaires (attention les tests modifies le fichier test.c): python3 test_unitaire.py
