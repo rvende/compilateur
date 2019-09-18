@@ -14,3 +14,12 @@ class arbre:
         print(self.type + ": " + str(self.valeur))
         for elem in self.fils:
             elem.afficher(niveau + 1)
+
+    def toString(self, niveau = 0):
+        res = ""
+        for i in range(niveau):
+            res += "\t"
+        res += self.type + ": " + str(self.valeur) + "\n"
+        for elem in self.fils:
+            res += elem.toString(niveau + 1)
+        return res

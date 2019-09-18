@@ -8,9 +8,13 @@ class lexical():
         self.fichier = open(fichier,"r")
         self.les_tokens = []
         self.mot_cles = {"if":"tok_if","for":"tok_for","int":"tok_int"}
+        self.operateur_binaire = {"+":"tok_plus", "-":"tok_moins", "*":"tok_multiplication", "/":"tok_division",\
+                                  "^":"tok_puissance", "%":"tok_modulo", "&":"tok_et", "|":"tok_ou"}
+        self.ponctuaction = {"(":"tok_parenthese_ouvrante", ")":"tok_parenthese_fermante",\
+                             "{":"tok_accolade_ouvrante", "}":"tok_accolade_fermante", ";":"tok_point_virgule", ",":"tok_virgule"}
+        self.comparaison = {"!=":"tok_different", "<":"tok_inferieur", ">":"tok_superieur", "<=":"tok_inferieur_egal",\
+                            "<=":"tok_inferieur_egal", "=":"tok_affectation", "==":"tok_egal"}
         self.content = self.fichier.read()
-        print(self.content)
-        print("taille :"+str(len(self.content)))
         self.index_token = -1
         self.num_lettre = 0
         self.num_lig = 1
@@ -19,7 +23,7 @@ class lexical():
     def next(self):
         # if(self.index_token == len(self.les_tokens)):
         #     self.index_token = 0
-        if self.index_token != -1:
+        if self.index_token != -1 and self.index_token < len(self.les_tokens):
             return self.les_tokens[self.index_token]
         else:
             return None
@@ -48,6 +52,7 @@ class lexical():
                     self.skip()
                 else:
                     if self.content[self.num_lettre] == "\n":
+                        print("here")
                         self.num_lig += 1
                         self.num_lettre += 1
                         self.num_col = 1
@@ -55,99 +60,31 @@ class lexical():
                         self.num_lettre += 1
                         self.num_col += 1
             else:
+                if len(self.content) == self.num_lettre:
+                    self.les_tokens.append({'type':'tok_EOF', "ligne": self.num_lig, "colonne": self.num_col})
+                    self.skip()
                 self.num_lettre += 1
                 self.num_col += 1
 
 
     def tokens(self, c):
-        if c == "+":
-            self.les_tokens.append({'type':'tok_plus', "ligne": self.num_lig, "colonne": self.num_col})
+        if c in self.operateur_binaire.keys():
+            self.les_tokens.append({'type': self.operateur_binaire[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
             self.num_col += 1
-        elif c == "-":
-            self.les_tokens.append({'type':'tok_moins', "ligne": self.num_lig, "colonne": self.num_col})
+        elif c in self.ponctuaction.keys():
+            self.les_tokens.append({'type': self.ponctuaction[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
             self.num_col += 1
-        elif c == "*":
-            self.les_tokens.append({'type':'tok_multiplication', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "/":
-            self.les_tokens.append({'type':'tok_division', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "%":
-            self.les_tokens.append({'type':'tok_modulo', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "^":
-            self.les_tokens.append({'type':'tok_puissance', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "!":
+        elif c in self.comparaison.keys():
             if self.content[self.num_lettre+1] == "=":
-                self.les_tokens.append({'type':'tok_different', "ligne": self.num_lig, "colonne": self.num_col})
-                self.num_lettre += 2
-                self.num_col += 2
-        elif c == "<":
-            if self.content[self.num_lettre+1] == "=":
-                self.les_tokens.append({'type':'tok_inferieur_egal', "ligne": self.num_lig, "colonne": self.num_col})
+                self.les_tokens.append({'type': self.comparaison[c+"="], "ligne": self.num_lig, "colonne": self.num_col})
                 self.num_lettre += 2
                 self.num_col += 2
             else:
-                self.les_tokens.append({'type':'tok_inferieur', "ligne": self.num_lig, "colonne": self.num_col})
+                self.les_tokens.append({'type': self.comparaison[c], "ligne": self.num_lig, "colonne": self.num_col})
                 self.num_lettre += 1
                 self.num_col += 1
-        elif c == ">":
-            if self.content[self.num_lettre+1] == "=":
-                self.les_tokens.append({'type':'tok_superieur_egal', "ligne": self.num_lig, "colonne": self.num_col})
-                self.num_lettre += 2
-                self.num_col += 2
-            else:
-                self.les_tokens.append({'type':'tok_superieur', "ligne": self.num_lig, "colonne": self.num_col})
-                self.num_lettre += 1
-                self.num_col += 1
-        elif c == "=":
-            if self.content[self.num_lettre+1] == "=":
-                self.les_tokens.append({'type':'tok_egal', "ligne": self.num_lig, "colonne": self.num_col})
-                self.num_lettre += 2
-                self.num_col += 2
-            else:
-                self.les_tokens.append({'type':'tok_affectation', "ligne": self.num_lig, "colonne": self.num_col})
-                self.num_lettre += 1
-                self.num_col += 1
-        elif c == "(":
-            self.les_tokens.append({'type':'tok_parenthese_ouvrante', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == ")":
-            self.les_tokens.append({'type':'tok_parenthese_fermante', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "{":
-            self.les_tokens.append({'type':'tok_accolade_ouvrante', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "}":
-            self.les_tokens.append({'type':'tok_accolade_fermante', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == ";":
-            self.les_tokens.append({'type':'tok_point_virgule', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == ",":
-            self.les_tokens.append({'type':'tok_virgule', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "&":
-            self.les_tokens.append({'type':'tok_et', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
-        elif c == "|":
-            self.les_tokens.append({'type':'tok_ou', "ligne": self.num_lig, "colonne": self.num_col})
-            self.num_lettre += 1
-            self.num_col += 1
         elif c.isdigit():
             i = self.num_lettre+1
             if i < len(self.content):
@@ -172,14 +109,11 @@ class lexical():
                 self.les_tokens.append({'type':self.mot_cles.get(c), 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
             else:
                 self.les_tokens.append({'type':'tok_identificateur', 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
-        if len(self.content)-1 == self.num_lettre:
-            self.les_tokens.append({'type':'tok_EOF', "ligne": self.num_lig, "colonne": self.num_col})
-            self.skip()
+        
 
 
 if __name__ == '__main__':
     l = lexical(sys.argv[1])
     l.main()
     print(l.les_tokens)
-    # l.index_token = 0
     expression(0,l).afficher()

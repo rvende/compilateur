@@ -52,4 +52,10 @@ def primaire(lexical):
         A = arbre("noeud_plus_unaire")
         A.ajouterFils(expression(tableauPriorite['tok_puissance']['priorite'], lexical))
         return A
-    raise Exception("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
+    raise SyntaxException("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
+
+class SyntaxException(Exception):
+    """docstring for SyntaxException"""
+    def __init__(self, message):
+        super().__init__(message)
+        
