@@ -13,7 +13,7 @@ class lexical():
         self.ponctuaction = {"(":"tok_parenthese_ouvrante", ")":"tok_parenthese_fermante",\
                              "{":"tok_accolade_ouvrante", "}":"tok_accolade_fermante", ";":"tok_point_virgule", ",":"tok_virgule"}
         self.comparaison = {"!=":"tok_different", "<":"tok_inferieur", ">":"tok_superieur", "<=":"tok_inferieur_egal",\
-                            "<=":"tok_inferieur_egal", "=":"tok_affectation", "==":"tok_egal"}
+                            ">=":"tok_superieur_egal", "=":"tok_affectation", "==":"tok_egal"}
         self.content = self.fichier.read()
         self.index_token = -1
         self.num_lettre = 0
@@ -21,17 +21,12 @@ class lexical():
         self.num_col = 1
 
     def next(self):
-        # if(self.index_token == len(self.les_tokens)):
-        #     self.index_token = 0
         if self.index_token != -1 and self.index_token < len(self.les_tokens):
             return self.les_tokens[self.index_token]
         else:
             return None
 
     def skip(self):
-        # if(self.index_token == len(self.les_tokens)):
-        #     self.index_token = 0
-        # else:
         self.index_token = self.index_token + 1
 
     def accept(self, t):
@@ -109,11 +104,18 @@ class lexical():
                 self.les_tokens.append({'type':self.mot_cles.get(c), 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
             else:
                 self.les_tokens.append({'type':'tok_identificateur', 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
-        
+
 
 
 if __name__ == '__main__':
     l = lexical(sys.argv[1])
     l.main()
     print(l.les_tokens)
-    expression(0,l).afficher()
+    a = expression(0,l)
+    a.afficher()
+    lancementGenerationCode(a)
+    bashCommand = "./msm/msm -d -d genCode"
+    import subprocess
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    print(output.decode('utf8'))
