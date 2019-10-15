@@ -47,7 +47,6 @@ class lexical():
                     self.skip()
                 else:
                     if self.content[self.num_lettre] == "\n":
-                        print("here")
                         self.num_lig += 1
                         self.num_lettre += 1
                         self.num_col = 1
@@ -110,7 +109,6 @@ class lexical():
 if __name__ == '__main__':
     l = lexical(sys.argv[1])
     l.main()
-    print(l.les_tokens)
     a = expression(0,l)
     a.afficher()
     lancementGenerationCode(a)

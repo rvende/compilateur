@@ -1,3 +1,9 @@
+
+*** PREPARATION ****
+- cd msm
+- Faire un make clean
+- Faire un make all
+********************
 Version: Python3
 Commande de lancement: python3 lexical.py NomDeFichier
 
