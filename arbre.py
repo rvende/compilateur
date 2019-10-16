@@ -8,6 +8,7 @@ class arbre:
     def ajouterFils(self, arbre):
         self.fils.append(arbre)
 
+
     def afficher(self, niveau = 0):
         for i in range(niveau):
             print("\t", end = '')

@@ -2,18 +2,19 @@ from lexical import *
 from arbre import *
 
 tableauPriorite = {
-    'tok_different': {'arbre': 'noeud_different', 'priorite': 0, 'associativite': 1},
-    'tok_inferieur': {'arbre': 'noeud_inferieur', 'priorite': 0, 'associativite': 1},
-    'tok_superieur': {'arbre': 'noeud_superieur', 'priorite': 0, 'associativite': 1},
-    'tok_inferieur_egal': {'arbre': 'noeud_inferieur_egal', 'priorite': 0, 'associativite': 1},
-    'tok_superieur_egal': {'arbre': 'noeud_superieur_egal', 'priorite': 0, 'associativite': 1},
-    'tok_egal': {'arbre': 'noeud_egal', 'priorite': 0, 'associativite': 1},
-    'tok_plus' : {'arbre': 'noeud_plus_binaire', 'priorite': 1, 'associativite': 1},
-    'tok_moins': {'arbre': 'noeud_moins_binaire', 'priorite': 1, 'associativite': 1},
-    'tok_multiplication': {'arbre': 'noeud_multiplication', 'priorite': 2, 'associativite': 1},
-    'tok_division': {'arbre': 'noeud_division', 'priorite': 2, 'associativite': 1},
-    'tok_modulo': {'arbre': 'noeud_modulo', 'priorite': 2, 'associativite': 1},
-    'tok_puissance': {'arbre': 'noeud_puissance', 'priorite': 3, 'associativite': 0},
+    'tok_affectation': {'arbre': 'noeud_affectation', 'priorite': 0, 'associativite': 0},
+    'tok_different': {'arbre': 'noeud_different', 'priorite': 1, 'associativite': 1},
+    'tok_inferieur': {'arbre': 'noeud_inferieur', 'priorite': 1, 'associativite': 1},
+    'tok_superieur': {'arbre': 'noeud_superieur', 'priorite': 1, 'associativite': 1},
+    'tok_inferieur_egal': {'arbre': 'noeud_inferieur_egal', 'priorite': 1, 'associativite': 1},
+    'tok_superieur_egal': {'arbre': 'noeud_superieur_egal', 'priorite': 1, 'associativite': 1},
+    'tok_egal': {'arbre': 'noeud_egal', 'priorite': 1, 'associativite': 1},
+    'tok_plus' : {'arbre': 'noeud_plus_binaire', 'priorite': 2, 'associativite': 1},
+    'tok_moins': {'arbre': 'noeud_moins_binaire', 'priorite': 2, 'associativite': 1},
+    'tok_multiplication': {'arbre': 'noeud_multiplication', 'priorite': 3, 'associativite': 1},
+    'tok_division': {'arbre': 'noeud_division', 'priorite': 3, 'associativite': 1},
+    'tok_modulo': {'arbre': 'noeud_modulo', 'priorite': 3, 'associativite': 1},
+    'tok_puissance': {'arbre': 'noeud_puissance', 'priorite': 4, 'associativite': 0}
 }
 
 op_unaire = {
@@ -37,6 +38,35 @@ op_binaire = {
 
 def chercherOp(token):
     return tableauPriorite.get(token['type'],None)
+
+def instruction(lexical):
+    if lexical.next()['type'] == "tok_if":
+        lexical.skip()
+        lexical.accept("tok_parenthese_ouvrante")
+        Ntest = expression(0,lexical)
+        lexical.accept("tok_parenthese_fermante")
+        AcodeV = instruction(lexical)
+        A = arbre("noeud_conditionnel")
+        A.ajouterFils(Ntest)
+        A.ajouterFils(AcodeV)
+        if lexical.next()['type'] == "tok_else":
+            lexical.accept("tok_else")
+            AcodeF = instruction(lexical)
+            A.ajouterFils(AcodeF)
+
+    elif lexical.next()['type'] == "tok_accolade_ouvrante":
+        lexical.accept("tok_accolade_ouvrante")
+        A = arbre("noeud_bloc")
+        while(lexical.next()['type'] != "tok_accolade_fermante"):
+            x = instruction(lexical)
+            A.ajouterFils(x)
+        lexical.accept("tok_accolade_fermante")
+    else:
+        E = expression(0,lexical)
+        lexical.accept("tok_point_virgule")
+        A = arbre("noeud_expression")
+        A.ajouterFils(E)
+    return A
 
 def expression(p, lexical):
     A1 = primaire(lexical)
@@ -75,21 +105,25 @@ def primaire(lexical):
         A = arbre("noeud_plus_unaire")
         A.ajouterFils(expression(tableauPriorite['tok_puissance']['priorite'], lexical))
         return A
-
-    raise SyntaxException("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
+    if(lexical.next()['type'] == "tok_identificateur"):
+        A = arbre("noeud_variable", lexical.next()['name'])
+        lexical.skip()
+        return A
+    #raise SyntaxException("Erreur: Primaire attendu près de "+ lexical.next()['type'] + " l:" + str(lexical.next()['ligne']) + ",c:"+ str(lexical.next()['colonne']))
 
 def lancementGenerationCode(arbre):
     fichier = open("genCode", "w")
     fichier.write(".start\n")
+    fichier.write("resn 1\n")
     genCode(arbre, fichier)
     fichier.write("dbg\n")
     fichier.write("halt\n")
     fichier.close()
 
-
+cpt = 0
 def genCode(noeud, fichier):
     # Constante
-    if (noeud.type) == "noeud_constante":
+    if noeud.type == "noeud_constante":
         fichier.write("push "+str(noeud.valeur)+"\n")
 
     # Opérateur binaire
@@ -105,8 +139,39 @@ def genCode(noeud, fichier):
         fichier.write(op_unaire[noeud.type]+"\n")
 
     # Autre
-    if (noeud.type) == "noeud_puissance":
+    if noeud.type == "noeud_puissance":
         raise GenCodeException("Erreur: noeud_puissance non implémenté.")
+
+    if noeud.type == "noeud_affectation":
+        genCode(noeud.fils[1], fichier)
+        fichier.write("dup\n")
+        fichier.write("set 0\n")
+
+    if noeud.type == "noeud_variable":
+        fichier.write("get 0\n")
+
+    if noeud.type == "noeud_bloc":
+        for i in range(len(noeud.fils)):
+            genCode(noeud.fils[i], fichier)
+
+    if noeud.type == "noeud_expression":
+        genCode(noeud.fils[0], fichier)
+        fichier.write("drop\n")
+
+    if noeud.type == "noeud_conditionnel":
+        global cpt
+        genCode(noeud.fils[0], fichier)
+        cpt += 1
+        fichier.write("jumpf l"+str(cpt)+"\n")
+        genCode(noeud.fils[1], fichier)
+        cpt += 1
+        print("Here: "+str(len(noeud.fils)))
+        if len(noeud.fils) > 2:
+            fichier.write("jump l"+str(cpt)+"\n")
+        fichier.write(".l"+str(cpt-1)+"\n")
+        if len(noeud.fils) > 2:
+            genCode(noeud.fils[2], fichier)
+            fichier.write(".l"+str(cpt)+"\n")
 
 class GenCodeException(Exception):
     """docstring for SyntaxException"""
