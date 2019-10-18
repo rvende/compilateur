@@ -42,12 +42,15 @@ class Analyse_semantique(object):
             S['type'] = "variable"
             S['slot'] = self.nbVariable
             self.nbVariable += 1
+            print(self.nbVariable)
         elif noeud.type == "noeud_variable":
             S = self.chercher(noeud.valeur)
             if(S['type'] != "variable"):
                 raise UnexpectedException("Erreur: Variable atttendu")
-            noeud.slot = S.slot
-            print("HEEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEE"+str(S.slot))
+            noeud.slot = S['slot']
+        else:
+            for enfant in noeud.fils:
+                self.analyse(enfant)
 
 class RedefinedException(Exception):
     """docstring for SyntaxException"""

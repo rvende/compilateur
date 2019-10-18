@@ -1,8 +1,6 @@
 import sys
 
-from syntax import *
-from genCode import *
-from semantique import *
+
 
 class Lexical():
 
@@ -105,20 +103,3 @@ class Lexical():
                 self.les_tokens.append({'type':self.mot_cles.get(c), 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
             else:
                 self.les_tokens.append({'type':'tok_identificateur', 'name': c, "ligne": self.num_lig, "colonne": self.num_col})
-
-
-
-if __name__ == '__main__':
-    lexical = Lexical(sys.argv[1])
-    lexical.main()
-    syntax = Syntax(lexical)
-    arbre = syntax.instruction()
-    arbre.afficher()
-    semantique = Analyse_semantique()
-    semantique.analyse(arbre)
-    lancementGenerationCode(arbre, syntax, semantique)
-    bashCommand = "./msm/msm -d -d genCode"
-    import subprocess
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    print(output.decode('utf8'))

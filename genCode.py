@@ -1,67 +1,72 @@
 from arbre import *
 from syntax import *
 
-def lancementGenerationCode(arbre, syntax, semantique):
-    fichier = open("genCode", "w")
-    fichier.write(".start\n")
-    fichier.write("resn "+str(semantique.nbVariable)+"\n")
-    genCode(arbre, fichier, syntax)
-    fichier.write("dbg\n")
-    fichier.write("halt\n")
-    fichier.close()
+class GenerationCode(object):
+    """docstring forGenerationCode."""
+    def __init__(self, syntax, semantique):
+        self.cpt = 0
+        self.syntax = syntax
+        self.semantique = semantique
+        self.fichier = open("genCode", "w")
+        self.fichier.write(".start\n")
+        self.fichier.write("resn "+str(self.semantique.nbVariable)+"\n")
 
-cpt = 0
-def genCode(noeud, fichier, syntax):
-    # Constante
-    if noeud.type == "noeud_constante":
-        fichier.write("push "+str(noeud.valeur)+"\n")
+    def lancementGenerationCode(self, noeud):
+        self.genCode(noeud)
+        self.fichier.write("dbg\n")
+        self.fichier.write("halt\n")
+        self.fichier.close()
 
-    # Opérateur binaire
-    if noeud.type in syntax.op_binaire.keys():
-        genCode(noeud.fils[0], fichier, syntax)
-        genCode(noeud.fils[1], fichier, syntax)
-        fichier.write(syntax.op_binaire[noeud.type]+"\n")
+    def genCode(self, noeud):
+        # Constante
+        if noeud.type == "noeud_constante":
+            self.fichier.write("push "+str(noeud.valeur)+"\n")
 
-    # Opérateur unaire
-    if noeud.type in syntax.op_unaire.keys():
-        fichier.write("push 0\n")
-        genCode(noeud.fils[0], fichier, syntax)
-        fichier.write(syntax.op_unaire[noeud.type]+"\n")
+        # Opérateur binaire
+        if noeud.type in self.syntax.op_binaire.keys():
+            self.genCode(noeud.fils[0])
+            self.genCode(noeud.fils[1])
+            self.fichier.write(self.syntax.op_binaire[noeud.type]+"\n")
 
-    # Autre
-    if noeud.type == "noeud_puissance":
-        raise GenCodeException("Erreur: noeud_puissance non implémenté.")
+        # Opérateur unaire
+        if noeud.type in self.syntax.op_unaire.keys():
+            self.fichier.write("push 0\n")
+            self.genCode(noeud.fils[0])
+            self.fichier.write(self.syntax.op_unaire[noeud.type]+"\n")
 
-    if noeud.type == "noeud_affectation":
-        genCode(noeud.fils[1], fichier, syntax)
-        fichier.write("dup\n")
-        fichier.write("set "+str(noeud.fils[0].slot)+"\n")
+        # Autre
+        if noeud.type == "noeud_puissance":
+            raise GenCodeException("Erreur: noeud_puissance non implémenté.")
 
-    if noeud.type == "noeud_variable":
-        fichier.write("get "+ str(noeud.slot) +" ;"+noeud.valeur+"\n")
+        if noeud.type == "noeud_affectation":
+            self.genCode(noeud.fils[1])
+            self.fichier.write("dup\n")
+            self.fichier.write("set "+str(noeud.fils[0].slot)+"\n")
 
-    if noeud.type == "noeud_bloc":
-        for i in range(len(noeud.fils)):
-            genCode(noeud.fils[i], fichier, syntax)
+        if noeud.type == "noeud_variable":
+            self.fichier.write("get "+ str(noeud.slot) +" ;"+noeud.valeur+"\n")
 
-    if noeud.type == "noeud_expression":
-        genCode(noeud.fils[0], fichier, syntax)
-        fichier.write("drop\n")
+        if noeud.type == "noeud_bloc":
+            for i in range(len(noeud.fils)):
+                self.genCode(noeud.fils[i])
 
-    if noeud.type == "noeud_conditionnel":
-        global cpt
-        genCode(noeud.fils[0], fichier, syntax)
-        cpt += 1
-        fichier.write("jumpf l"+str(cpt)+"\n")
-        genCode(noeud.fils[1], fichier, syntax)
-        cpt += 1
-        print("Here: "+str(len(noeud.fils)))
-        if len(noeud.fils) > 2:
-            fichier.write("jump l"+str(cpt)+"\n")
-        fichier.write(".l"+str(cpt-1)+"\n")
-        if len(noeud.fils) > 2:
-            genCode(noeud.fils[2], fichier, syntax)
-            fichier.write(".l"+str(cpt)+"\n")
+        if noeud.type == "noeud_expression":
+            self.genCode(noeud.fils[0])
+            self.fichier.write("drop\n")
+
+        if noeud.type == "noeud_conditionnel":
+            self.genCode(noeud.fils[0])
+            self.cpt += 1
+            self.fichier.write("jumpf l"+str(self.cpt)+"\n")
+            self.genCode(noeud.fils[1])
+            self.cpt += 1
+            print("Here: "+str(len(noeud.fils)))
+            if len(noeud.fils) > 2:
+                self.fichier.write("jump l"+str(self.cpt)+"\n")
+            self.fichier.write(".l"+str(self.cpt-1)+"\n")
+            if len(noeud.fils) > 2:
+                self.genCode(noeud.fils[2])
+                self.fichier.write(".l"+str(self.cpt)+"\n")
 
 
 class GenCodeException(Exception):

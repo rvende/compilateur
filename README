@@ -4,8 +4,9 @@
 - Faire un make clean
 - Faire un make all
 ********************
+
 Version: Python3
-Commande de lancement: python3 lexical.py NomDeFichier
+Commande de lancement: python3 main.py NomDeFichier
 
 Fonctionnalités inclusent:
 - Traitement des lignes présentent dans un fichier
@@ -18,6 +19,6 @@ Fonctionnalités manquantes :
 - Gestion des expressions : =
 - Gestion des boucles conditionnelles : if, else, for
 - Gestion de type : int
-- Opérateurs binaire : == , != , < , > , <= , >= , & , | 
+- Opérateurs binaire : == , != , < , > , <= , >= , & , |
 
 Pour lancer les tests unitaires (attention les tests modifies le fichier test.c): python3 test_unitaire.py
