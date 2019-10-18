@@ -1,13 +1,15 @@
 import sys
 
 from syntax import *
+from genCode import *
+from semantique import *
 
-class lexical():
+class Lexical():
 
     def __init__(self, fichier):
         self.fichier = open(fichier,"r")
         self.les_tokens = []
-        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "int":"tok_int"}
+        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var"}
         self.operateur_binaire = {"+":"tok_plus", "-":"tok_moins", "*":"tok_multiplication", "/":"tok_division",\
                                   "^":"tok_puissance", "%":"tok_modulo", "&":"tok_et", "|":"tok_ou"}
         self.ponctuaction = {"(":"tok_parenthese_ouvrante", ")":"tok_parenthese_fermante",\
@@ -107,12 +109,14 @@ class lexical():
 
 
 if __name__ == '__main__':
-    l = lexical(sys.argv[1])
-    l.main()
-    print(l.les_tokens)
-    a = instruction(l)
-    a.afficher()
-    lancementGenerationCode(a)
+    lexical = Lexical(sys.argv[1])
+    lexical.main()
+    syntax = Syntax(lexical)
+    arbre = syntax.instruction()
+    arbre.afficher()
+    semantique = Analyse_semantique()
+    semantique.analyse(arbre)
+    lancementGenerationCode(arbre, syntax, semantique)
     bashCommand = "./msm/msm -d -d genCode"
     import subprocess
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
