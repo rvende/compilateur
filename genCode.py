@@ -60,13 +60,19 @@ class GenerationCode(object):
             self.fichier.write("jumpf l"+str(self.cpt)+"\n")
             self.genCode(noeud.fils[1])
             self.cpt += 1
-            print("Here: "+str(len(noeud.fils)))
             if len(noeud.fils) > 2:
                 self.fichier.write("jump l"+str(self.cpt)+"\n")
             self.fichier.write(".l"+str(self.cpt-1)+"\n")
             if len(noeud.fils) > 2:
                 self.genCode(noeud.fils[2])
                 self.fichier.write(".l"+str(self.cpt)+"\n")
+
+        if noeud.type == "noeud_loop":
+            self.cpt += 1
+            self.fichier.write(".l"+str(self.cpt)+"\n")
+            self.genCode(noeud.fils[0])
+            self.fichier.write("jump l"+str(self.cpt-1)+"\n")
+
 
 
 class GenCodeException(Exception):

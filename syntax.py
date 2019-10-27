@@ -70,6 +70,23 @@ class Syntax(object):
                 x = self.instruction()
                 A.ajouterFils(x)
             self.lexical.accept("tok_accolade_fermante")
+        #Code boucle WHILE TODO RPP Warren
+        elif self.lexical.next()['type'] == "tok_while":
+            self.lexical.accept("tok_while")
+            A = arbre("noeud_loop")
+            C = arbre("noeud_conditionnel")
+            self.lexical.accept("tok_parenthese_ouvrante")
+            #ici on cherche l'expression d'un test
+            T = self.expression(0)
+            C.ajouterFils(T)#on ajoute la partie de test a l'arbre
+            self.lexical.accept("tok_parenthese_fermante")
+            #on passe maintenant à la partie du bloc
+            B = self.instruction() #on construit le bloc
+            C.ajouterFils(B) #on ajoute le bloc à l'arbre
+            br = arbre("noeud_break")
+            C.ajouterFils(br)
+            A.ajouterFils(C)
+
         else:
             E = self.expression(0)
             self.lexical.accept("tok_point_virgule")
