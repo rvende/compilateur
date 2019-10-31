@@ -37,6 +37,7 @@ class GenerationCode(object):
         # Autre
         if noeud.type == "noeud_puissance":
             raise GenCodeException("Erreur: noeud_puissance non implémenté.")
+        
 
         if noeud.type == "noeud_affectation":
             self.genCode(noeud.fils[1])

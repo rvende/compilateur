@@ -22,3 +22,35 @@ Fonctionnalités manquantes :
 - Opérateurs binaire : == , != , < , > , <= , >= , & , |
 
 Pour lancer les tests unitaires (attention les tests modifies le fichier test.c): python3 test_unitaire.py
+
+*************Syntaxe des boucles*************
+
+----While: 
+
+while(<test>){
+  <chose à faire>
+}
+
+-exemple:
+
+var a;
+while(a<2){
+  a = a + 1;
+}
+
+----For:
+
+for(<initialisation>;<test>;<incrementation>;){
+  <chose à faire>
+}
+
+-exemple:
+
+var a;
+a = 0;
+var i;
+for(i = 0; i < 10; i = i + 1;){
+  a = a + i;
+}
+
+*********************************************

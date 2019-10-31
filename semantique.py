@@ -31,7 +31,6 @@ class Analyse_semantique(object):
         raise UndefinedException("Erreur: Variable non déclarée")
 
     def analyse(self, noeud):
-        print(noeud.type)
         if noeud.type == "noeud_bloc":
             self.debut_bloc()
             for enfant in noeud.fils:
@@ -42,7 +41,6 @@ class Analyse_semantique(object):
             S['type'] = "variable"
             S['slot'] = self.nbVariable
             self.nbVariable += 1
-            print(self.nbVariable)
         elif noeud.type == "noeud_variable":
             S = self.chercher(noeud.valeur)
             if(S['type'] != "variable"):
