@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     semantique = Analyse_semantique()
     semantique.analyse(arbre)
-
+    
     generationCode = GenerationCode(syntax, semantique)
     generationCode.lancementGenerationCode(arbre)
 

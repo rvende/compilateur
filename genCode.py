@@ -56,22 +56,33 @@ class GenerationCode(object):
 
         if noeud.type == "noeud_conditionnel":
             self.genCode(noeud.fils[0])
+            memory = self.cpt + 1
             self.cpt += 1
-            self.fichier.write("jumpf l"+str(self.cpt)+"\n")
+            self.fichier.write("jumpf l"+str(memory)+"\n")
             self.genCode(noeud.fils[1])
+            memory += 1
             self.cpt += 1
-            if len(noeud.fils) > 2:
+            if len(noeud.fils) > 2: #si il y a un break sur la cond
                 self.fichier.write("jump l"+str(self.cpt)+"\n")
-            self.fichier.write(".l"+str(self.cpt-1)+"\n")
-            if len(noeud.fils) > 2:
+            self.fichier.write(".l"+str(memory-1)+"\n")
+            if len(noeud.fils) > 2: #si il y a un break sur la cond
                 self.genCode(noeud.fils[2])
-                self.fichier.write(".l"+str(self.cpt)+"\n")
+                
+
+        if noeud.type == "noeud_break":
+            jump = self.cpt
+            memory = self.cpt + 1
+            self.cpt += 1
+            self.fichier.write("jump l"+str(self.cpt)+" ;break\n")
+            self.fichier.write(".l"+str(jump)+"\n")
 
         if noeud.type == "noeud_loop":
             self.cpt += 1
-            self.fichier.write(".l"+str(self.cpt)+"\n")
+            loop = self.cpt
+            self.fichier.write(".l"+str(loop)+"\n")
             self.genCode(noeud.fils[0])
-            self.fichier.write("jump l"+str(self.cpt-1)+"\n")
+            self.fichier.write("jump l"+str(loop)+"\n")
+            self.fichier.write(".l"+str(self.cpt)+"\n")
 
 
 
