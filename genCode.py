@@ -37,7 +37,7 @@ class GenerationCode(object):
         # Autre
         if noeud.type == "noeud_puissance":
             raise GenCodeException("Erreur: noeud_puissance non implémenté.")
-        
+
 
         if noeud.type == "noeud_affectation":
             self.genCode(noeud.fils[1])
@@ -67,8 +67,12 @@ class GenerationCode(object):
                 self.fichier.write("jump l"+str(self.cpt)+"\n")
             self.fichier.write(".l"+str(memory-1)+"\n")
             if len(noeud.fils) > 2: #si il y a un break sur la cond
-                self.genCode(noeud.fils[2])
-                
+                if noeud.fils[2].type == "noeud_break":
+                    self.genCode(noeud.fils[2])
+                else:
+                    self.genCode(noeud.fils[2])
+                    self.fichier.write(".l"+str(memory)+"\n")
+
 
         if noeud.type == "noeud_break":
             jump = self.cpt
