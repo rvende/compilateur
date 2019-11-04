@@ -14,12 +14,14 @@ Fonctionnalités inclusent:
 - Traitement des primaires
 - Gestion des parenthèses
 - Traitement des expressions : +, -, *, /, %, ^
+- Gestion des boucles conditionnelles : if, else, for, while
+- Gestion des expressions : = 
+- Gestion de type : var
+
 
 Fonctionnalités manquantes :
-- Gestion des expressions : =
-- Gestion des boucles conditionnelles : if, else, for
-- Gestion de type : int
-- Opérateurs binaire : == , != , < , > , <= , >= , & , |
+- Opérateurs binaire : !=, & , |
+
 
 Pour lancer les tests unitaires (attention les tests modifies le fichier test.c): python3 test_unitaire.py
 
