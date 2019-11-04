@@ -12,7 +12,7 @@
   }
   var c;
   c = a+b;
-  if(c == 61){
+  if(c != 61){
     c = c+5;
   }else{
     c = c +7;

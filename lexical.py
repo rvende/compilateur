@@ -62,6 +62,8 @@ class Lexical():
 
 
     def tokens(self, c):
+        print(c)
+        print(self.comparaison.keys())
         if c in self.operateur_binaire.keys():
             self.les_tokens.append({'type': self.operateur_binaire[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
@@ -70,7 +72,7 @@ class Lexical():
             self.les_tokens.append({'type': self.ponctuaction[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
             self.num_col += 1
-        elif c in self.comparaison.keys():
+        elif c in self.comparaison.keys() or c == "!":
             if self.content[self.num_lettre+1] == "=":
                 self.les_tokens.append({'type': self.comparaison[c+"="], "ligne": self.num_lig, "colonne": self.num_col})
                 self.num_lettre += 2
