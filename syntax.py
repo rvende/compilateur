@@ -67,9 +67,15 @@ class Syntax(object):
             self.lexical.accept("tok_accolade_ouvrante")
             A = arbre("noeud_bloc")
             while(self.lexical.next()['type'] != "tok_accolade_fermante"):
+                print("suivant dans bloc : "+self.lexical.next()['type'])
                 x = self.instruction()
                 A.ajouterFils(x)
             self.lexical.accept("tok_accolade_fermante")
+
+        elif self.lexical.next()['type'] == "tok_function":
+            self.lexical.accept("tok_function")
+            A = arbre("noeud_function")
+
         #Code boucle WHILE TODO RPP Warren
         elif self.lexical.next()['type'] == "tok_while":
             self.lexical.accept("tok_while")
@@ -152,8 +158,21 @@ class Syntax(object):
             A.ajouterFils(self.expression(self.tableauPriorite['tok_puissance']['priorite']))
             return A
         if(self.lexical.next()['type'] == "tok_identificateur"):
-            A = arbre("noeud_variable", self.lexical.next()['name'])
+            name = self.lexical.next()['name']
             self.lexical.skip()
+            if self.lexical.next()['type'] == "tok_parenthese_ouvrante":
+                print("if : "+self.lexical.next()['type'])
+                A = arbre("noeud_appel_fonction",name)
+                self.lexical.accept("tok_parenthese_ouvrante")
+                while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                    E = self.expression(0)
+                    A.ajouterFils(E)
+                    if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                        self.lexical.accept("tok_virgule")
+                self.lexical.accept("tok_parenthese_fermante")
+            else:
+                A = arbre("noeud_variable",name )
+                
             return A
 
 class SyntaxException(Exception):

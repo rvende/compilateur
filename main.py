@@ -7,7 +7,7 @@ from genCode import *
 if __name__ == '__main__':
     lexical = Lexical(sys.argv[1])
     lexical.main()
-
+    print(lexical.les_tokens)
     syntax = Syntax(lexical)
     arbre = syntax.instruction()
     arbre.afficher()

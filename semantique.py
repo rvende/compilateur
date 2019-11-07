@@ -46,6 +46,10 @@ class Analyse_semantique(object):
             if(S['type'] != "variable"):
                 raise UnexpectedException("Erreur: Variable atttendu")
             noeud.slot = S['slot']
+        elif noeud.type == "noeud_function":
+            for enfant in noeud.fils:
+                self.analyse(enfant)
+            noeud.slot = self.nbVariable
         else:
             for enfant in noeud.fils:
                 self.analyse(enfant)

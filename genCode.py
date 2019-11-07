@@ -89,6 +89,13 @@ class GenerationCode(object):
             self.fichier.write("jump l"+str(loop)+"\n")
             self.fichier.write(".l"+str(self.cpt)+"\n")
 
+        if noeud.type == "noeud_appel_fonction":
+            self.fichier.write("prep "+noeud.valeur+"\n")
+            for i in range(len(noeud.fils)):
+                self.genCode(noeud.fils[i])
+            self.fichier.write("call "+str(len(noeud.fils))+"\n")
+
+
 
 
 class GenCodeException(Exception):
