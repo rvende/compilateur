@@ -71,6 +71,10 @@ class Syntax(object):
                 A.ajouterFils(x)
             self.lexical.accept("tok_accolade_fermante")
         #Code boucle WHILE TODO RPP Warren
+        elif self.lexical.next()["type"] == "tok_break":
+            self.lexical.accept("tok_break")
+            self.lexical.accept("tok_point_virgule")
+            A = arbre("noeud_break")
         elif self.lexical.next()['type'] == "tok_while":
             self.lexical.accept("tok_while")
             A = arbre("noeud_loop")
@@ -93,10 +97,12 @@ class Syntax(object):
             initialisation = self.instruction()
             test = self.expression(0)
             self.lexical.accept("tok_point_virgule")
-            incrementation = self.instruction()
+            incrementation = self.expression(0)
+            noeud_incrementation = arbre("noeud_expression")
+            noeud_incrementation.ajouterFils(incrementation)
             self.lexical.accept("tok_parenthese_fermante")
             Bloc = self.instruction()
-            Bloc.ajouterFils(incrementation) 
+            Bloc.ajouterFils(noeud_incrementation)
             A.ajouterFils(initialisation)
             L = arbre("noeud_loop")
             A.ajouterFils(L)

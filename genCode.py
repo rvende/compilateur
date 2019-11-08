@@ -5,6 +5,7 @@ class GenerationCode(object):
     """docstring forGenerationCode."""
     def __init__(self, syntax, semantique):
         self.cpt = 0
+        self.loop = []
         self.syntax = syntax
         self.semantique = semantique
         self.fichier = open("genCode", "w")
@@ -57,37 +58,42 @@ class GenerationCode(object):
 
         if noeud.type == "noeud_conditionnel":
             self.genCode(noeud.fils[0])
-            memory = self.cpt + 1
             self.cpt += 1
-            self.fichier.write("jumpf l"+str(memory)+"\n")
+            memory_false = self.cpt
+            self.fichier.write("jumpf l"+str(memory_false)+"\n")
             self.genCode(noeud.fils[1])
-            memory += 1
             self.cpt += 1
             if len(noeud.fils) > 2: #si il y a un break sur la cond
                 self.fichier.write("jump l"+str(self.cpt)+"\n")
-            self.fichier.write(".l"+str(memory-1)+"\n")
+            self.fichier.write(".l"+str(memory_false)+"\n")
             if len(noeud.fils) > 2: #si il y a un break sur la cond
-                if noeud.fils[2].type == "noeud_break":
-                    self.genCode(noeud.fils[2])
-                else:
-                    self.genCode(noeud.fils[2])
-                    self.fichier.write(".l"+str(memory)+"\n")
+                self.genCode(noeud.fils[2])
+                self.fichier.write(".l"+str(self.cpt)+"\n")
+                # if noeud.fils[2].type == "noeud_break":
+                #     self.genCode(noeud.fils[2])
+                #     self.fichier.write(".l"+str(memory)+"\n")
+                # else:
+                #     self.genCode(noeud.fils[2])
+                #     self.fichier.write(".l"+str(memory)+"\n")
 
 
         if noeud.type == "noeud_break":
-            jump = self.cpt
-            memory = self.cpt + 1
-            self.cpt += 1
-            self.fichier.write("jump l"+str(self.cpt)+" ;break\n")
-            self.fichier.write(".l"+str(jump)+"\n")
+            if self.loop != []:
+                self.fichier.write("jump l"+str(self.loop[-1][1])+" ;break\n")
+            else:
+                raise GenCodeException("Erreur: break n'est pas dans une boucle.")
 
         if noeud.type == "noeud_loop":
             self.cpt += 1
-            loop = self.cpt
-            self.fichier.write(".l"+str(loop)+"\n")
+            # stockage des labels de début et fin de loop dans un tuple: (debut,fin)
+            self.loop.append((self.cpt,self.cpt+1))
+            self.cpt += 1
+            current_loop = self.loop[-1]
+            self.fichier.write(".l"+str(current_loop[0])+"\n")
             self.genCode(noeud.fils[0])
-            self.fichier.write("jump l"+str(loop)+"\n")
-            self.fichier.write(".l"+str(self.cpt)+"\n")
+            self.fichier.write("jump l"+str(current_loop[0])+"\n")
+            self.fichier.write(".l"+str(current_loop[1])+"\n")
+            self.loop.pop()
 
 
 
