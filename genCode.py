@@ -9,7 +9,7 @@ class GenerationCode(object):
         self.syntax = syntax
         #self.semantique = semantique
         self.fichier = open("genCode", "w")
-        
+
 
     def lancementGenerationCode(self, liste_noeud):
         for noeud in liste_noeud:
@@ -90,6 +90,12 @@ class GenerationCode(object):
             else:
                 raise GenCodeException("Erreur: break n'est pas dans une boucle.")
 
+        if noeud.type == "noeud_continue":
+            if self.loop != []:
+                self.fichier.write("jump l"+str(self.loop[-1][0])+" ;continue\n")
+            else:
+                raise GenCodeException("Erreur: continue n'est pas dans une boucle.")
+
         if noeud.type == "noeud_loop":
             self.cpt += 1
             # stockage des labels de début et fin de loop dans un tuple: (debut,fin)
@@ -111,7 +117,7 @@ class GenerationCode(object):
         if noeud.type == "noeud_function":
             self.fichier.write("."+noeud.valeur+"\n")
             self.fichier.write("resn "+str(noeud.slot-noeud.nargs)+"\n")
-            
+
             self.genCode(noeud.fils[0])
 
             self.fichier.write("push 0 \n")

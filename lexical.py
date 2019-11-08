@@ -7,7 +7,8 @@ class Lexical():
     def __init__(self, fichier):
         self.fichier = open(fichier,"r")
         self.les_tokens = []
-        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while","function":"tok_function","return":"tok_return", "break":"tok_break"}
+        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while","function":"tok_function","return":"tok_return", "break":"tok_break",\
+                        "continue": "tok_continue"}
         self.operateur_binaire = {"+":"tok_plus", "-":"tok_moins", "*":"tok_multiplication", "/":"tok_division",\
                                   "^":"tok_puissance", "%":"tok_modulo", "&":"tok_et", "|":"tok_ou"}
         self.ponctuaction = {"(":"tok_parenthese_ouvrante", ")":"tok_parenthese_fermante",\
