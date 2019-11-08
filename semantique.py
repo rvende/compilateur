@@ -49,6 +49,7 @@ class Analyse_semantique(object):
         elif noeud.type == "noeud_function":
             for enfant in noeud.fils:
                 self.analyse(enfant)
+            print("nb variable de noeud_function : "+str(self.nbVariable))
             noeud.slot = self.nbVariable
         else:
             for enfant in noeud.fils:

@@ -3,18 +3,25 @@ from syntax import *
 
 class GenerationCode(object):
     """docstring forGenerationCode."""
-    def __init__(self, syntax, semantique):
+    def __init__(self, syntax):
         self.cpt = 0
         self.syntax = syntax
-        self.semantique = semantique
+        #self.semantique = semantique
         self.fichier = open("genCode", "w")
-        self.fichier.write(".start\n")
-        self.fichier.write("resn "+str(self.semantique.nbVariable)+"\n")
+        
 
-    def lancementGenerationCode(self, noeud):
-        self.genCode(noeud)
-        self.fichier.write("dbg\n")
+    def lancementGenerationCode(self, liste_noeud):
+        for noeud in liste_noeud:
+            self.genCode(noeud)
+        self.fichier.write(".start\n")
+        #self.fichier.write("resn "+str(self.semantique.nbVariable)+"\n")
+        self.fichier.write("prep main\n")
+        self.fichier.write("call 0\n")
+        #self.fichier.write("dbg\n")
         self.fichier.write("halt\n")
+        self.fichier.close()
+        self.fichier = open("genCode", "r")
+        print("\n\nContenu genCode : \n "+self.fichier.read())
         self.fichier.close()
 
     def genCode(self, noeud):
@@ -94,6 +101,20 @@ class GenerationCode(object):
             for i in range(len(noeud.fils)):
                 self.genCode(noeud.fils[i])
             self.fichier.write("call "+str(len(noeud.fils))+"\n")
+
+        if noeud.type == "noeud_function":
+            self.fichier.write("."+noeud.valeur+"\n")
+            self.fichier.write("resn "+str(noeud.slot-noeud.nargs)+"\n")
+            
+            self.genCode(noeud.fils[0])
+
+            self.fichier.write("push 0 \n")
+            self.fichier.write("ret \n")
+
+        if noeud.type == "noeud_return":
+            self.genCode(noeud.fils[0])
+            self.fichier.write("ret \n")
+
 
 
 
