@@ -6,6 +6,7 @@ from genCode import *
 
 if __name__ == '__main__':
     lexical = Lexical(sys.argv[1])
+    print("toto")
     lexical.main()
     print(lexical.les_tokens)
     liste_arbre = []
@@ -26,7 +27,7 @@ if __name__ == '__main__':
 
     print("tutu")
 
-    bashCommand = "./msm/msm -d -d genCode"
+    bashCommand = "./msm/msm genCode"
     import subprocess
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()

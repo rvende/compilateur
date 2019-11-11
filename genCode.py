@@ -121,6 +121,9 @@ class GenerationCode(object):
             self.genCode(noeud.fils[0])
             self.fichier.write("ret \n")
 
+        if noeud.type == "noeud_send":
+            self.fichier.write("send \n")
+
 
 
 

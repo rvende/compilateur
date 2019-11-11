@@ -156,6 +156,12 @@ class Syntax(object):
             C.ajouterFils(test)
             C.ajouterFils(Bloc)
             C.ajouterFils(br)
+        elif self.lexical.next()["type"] == "tok_send":
+            self.lexical.accept("tok_send")
+            A = arbre("noeud_send")
+            E = self.expression(0)
+            A.ajouterFils(E)
+            self.lexical.accept("tok_point_virgule")
 
         else:
             E = self.expression(0)
