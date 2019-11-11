@@ -18,7 +18,7 @@ class GenerationCode(object):
         #self.fichier.write("resn "+str(self.semantique.nbVariable)+"\n")
         self.fichier.write("prep main\n")
         self.fichier.write("call 0\n")
-        #self.fichier.write("dbg\n")
+        self.fichier.write("dbg\n")
         self.fichier.write("halt\n")
         self.fichier.close()
         self.fichier = open("genCode", "r")
