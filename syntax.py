@@ -88,23 +88,23 @@ class Syntax(object):
             listeArg = []
             while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
                 nbArg += 1
-                
+
                 #self.lexical.accept("tok_var")
                 #A = arbre("noeud_declaration",self.lexical.next()['name'])
                 E = arbre("noeud_declaration",self.lexical.next()['name'])
                 #E = self.expression(0)
                 listeArg.append(E)
                 self.lexical.skip()
-                
+
                 if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
                     self.lexical.accept("tok_virgule")
-            
+
             self.lexical.accept("tok_parenthese_fermante")
 
 
 
             B = arbre("noeud_bloc")
-            
+
             I = self.instruction()
             for expression in listeArg:
                 B.ajouterFils(expression)
@@ -119,6 +119,10 @@ class Syntax(object):
             self.lexical.accept("tok_break")
             self.lexical.accept("tok_point_virgule")
             A = arbre("noeud_break")
+        elif self.lexical.next()["type"] == "tok_continue":
+            self.lexical.accept("tok_continue")
+            self.lexical.accept("tok_point_virgule")
+            A = arbre("noeud_continue")
         elif self.lexical.next()['type'] == "tok_while":
             self.lexical.accept("tok_while")
             A = arbre("noeud_loop")
@@ -223,7 +227,7 @@ class Syntax(object):
                 self.lexical.accept("tok_parenthese_fermante")
             else:
                 A = arbre("noeud_variable",name )
-                
+
             return A
 
     def fonction(self):
@@ -235,18 +239,18 @@ class Syntax(object):
         listeArg = []
         while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
             nbArg += 1
-            
+
                 #A = arbre("noeud_declaration",self.lexical.next()['name'])
             E = arbre("noeud_declaration",self.lexical.next()['name'])
                 #E = self.expression(0)
             listeArg.append(E)
             self.lexical.skip()
-                
+
             if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
                 self.lexical.accept("tok_virgule")
         self.lexical.accept("tok_parenthese_fermante")
         B = arbre("noeud_bloc")
-            
+
         I = self.instruction()
         for expression in listeArg:
             B.ajouterFils(expression)
