@@ -39,6 +39,7 @@ function main() {
 	var a; 
 	a = 2; 
 	a = a+ somme(22,4,2); 
-	send a;
+	print(a);
 	return a;
 }
+

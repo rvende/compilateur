@@ -74,7 +74,6 @@ class Syntax(object):
             self.lexical.accept("tok_accolade_ouvrante")
             A = arbre("noeud_bloc")
             while(self.lexical.next()['type'] != "tok_accolade_fermante"):
-                print("suivant dans bloc : "+self.lexical.next()['type'])
                 x = self.instruction()
                 A.ajouterFils(x)
             self.lexical.accept("tok_accolade_fermante")
@@ -89,10 +88,8 @@ class Syntax(object):
             while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
                 nbArg += 1
 
-                #self.lexical.accept("tok_var")
-                #A = arbre("noeud_declaration",self.lexical.next()['name'])
                 E = arbre("noeud_declaration",self.lexical.next()['name'])
-                #E = self.expression(0)
+                
                 listeArg.append(E)
                 self.lexical.skip()
 
@@ -109,12 +106,10 @@ class Syntax(object):
             for expression in listeArg:
                 B.ajouterFils(expression)
             B.ajouterFils(I)
-            #print("nb slot dans I : "+str(I.slot))
+            #TODO changer cst 2 avec le vrai nombre de variable declaré
             A = arbre("noeud_function",name,2,nbArg)
             A.ajouterFils(B)
-            #A.ajouterFils(B)
 
-        #Code boucle WHILE TODO RPP Warren
         elif self.lexical.next()["type"] == "tok_break":
             self.lexical.accept("tok_break")
             self.lexical.accept("tok_point_virgule")
@@ -169,7 +164,6 @@ class Syntax(object):
 
         else:
             E = self.expression(0)
-            print("after else type : "+self.lexical.next()['type'])
             self.lexical.accept("tok_point_virgule")
             A = arbre("noeud_expression")
             A.ajouterFils(E)
@@ -216,7 +210,6 @@ class Syntax(object):
             name = self.lexical.next()['name']
             self.lexical.skip()
             if self.lexical.next()['type'] == "tok_parenthese_ouvrante":
-                print("if : "+self.lexical.next()['type'])
                 A = arbre("noeud_appel_fonction",name)
                 self.lexical.accept("tok_parenthese_ouvrante")
                 while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
@@ -239,10 +232,7 @@ class Syntax(object):
         listeArg = []
         while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
             nbArg += 1
-
-                #A = arbre("noeud_declaration",self.lexical.next()['name'])
             E = arbre("noeud_declaration",self.lexical.next()['name'])
-                #E = self.expression(0)
             listeArg.append(E)
             self.lexical.skip()
 
@@ -255,7 +245,6 @@ class Syntax(object):
         for expression in listeArg:
             B.ajouterFils(expression)
         B.ajouterFils(I)
-            #print("nb slot dans I : "+str(I.slot))
         A = arbre("noeud_function",name,2,nbArg)
         A.ajouterFils(B)
         return A

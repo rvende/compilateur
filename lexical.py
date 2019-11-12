@@ -8,7 +8,6 @@ class Lexical():
         self.fichier = open(fichier,"r")
         self.les_tokens = []
 
-        #self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while","function":"tok_function","return":"tok_return", "break":"tok_break"}
         self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while","function":"tok_function","return":"tok_return", "break":"tok_break",\
                         "continue": "tok_continue","send":"tok_send","recv":"tok_recv"}
         self.operateur_binaire = {"+":"tok_plus", "-":"tok_moins", "*":"tok_multiplication", "/":"tok_division",\
@@ -65,8 +64,6 @@ class Lexical():
 
 
     def tokens(self, c):
-        #print(c)
-        #print(self.comparaison.keys())
         if c in self.operateur_binaire.keys():
             self.les_tokens.append({'type': self.operateur_binaire[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
