@@ -20,12 +20,8 @@ if __name__ == '__main__':
         semantique = Analyse_semantique()
         semantique.analyse(arbre)
 
-
-    print("tata")
     generationCode = GenerationCode(syntax)
     generationCode.lancementGenerationCode(liste_arbre)
-
-    print("tutu")
 
     bashCommand = "./msm/msm genCode"
     import subprocess

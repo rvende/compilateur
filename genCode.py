@@ -67,21 +67,21 @@ class GenerationCode(object):
             self.genCode(noeud.fils[0])
             self.cpt += 1
             memory_false = self.cpt
-            self.fichier.write("jumpf l"+str(memory_false)+"\n")
+            self.fichier.write("jumpf l"+str(memory_false)+" ;jump cond false \n")
             self.genCode(noeud.fils[1])
             self.cpt += 1
+            if len(noeud.fils) > 2 and noeud.fils[2].type=="noeud_break": #si il y a un break sur la cond
+                self.fichier.write("jump l"+str(self.cpt)+" ;jump label loop\n")
+            self.fichier.write(".l"+str(memory_false)+" ;label break\n")
             if len(noeud.fils) > 2: #si il y a un break sur la cond
-                self.fichier.write("jump l"+str(self.cpt)+"\n")
-            self.fichier.write(".l"+str(memory_false)+"\n")
-            if len(noeud.fils) > 2: #si il y a un break sur la cond
-                self.genCode(noeud.fils[2])
-                self.fichier.write(".l"+str(self.cpt)+"\n")
-                # if noeud.fils[2].type == "noeud_break":
-                #     self.genCode(noeud.fils[2])
-                #     self.fichier.write(".l"+str(memory)+"\n")
-                # else:
-                #     self.genCode(noeud.fils[2])
-                #     self.fichier.write(".l"+str(memory)+"\n")
+                #self.genCode(noeud.fils[2])
+                #self.fichier.write(".l"+str(self.cpt)+" ;label loop "+str(noeud.type)+"\n")
+                if noeud.fils[2].type == "noeud_break":
+                    self.genCode(noeud.fils[2])
+                    self.fichier.write(".l"+str(self.cpt)+" ;label loop "+str(noeud.type)+"\n")
+                else:
+                    self.genCode(noeud.fils[2])
+                    #self.fichier.write(".l"+str(self.cpt)+" ;label else "+str(noeud.type)+"\n")
 
 
         if noeud.type == "noeud_break":
@@ -102,10 +102,10 @@ class GenerationCode(object):
             self.loop.append((self.cpt,self.cpt+1))
             self.cpt += 1
             current_loop = self.loop[-1]
-            self.fichier.write(".l"+str(current_loop[0])+"\n")
+            self.fichier.write(".l"+str(current_loop[0])+" ;loop\n")
             self.genCode(noeud.fils[0])
-            self.fichier.write("jump l"+str(current_loop[0])+"\n")
-            self.fichier.write(".l"+str(current_loop[1])+"\n")
+            self.fichier.write("jump l"+str(current_loop[0])+" ;jump loop\n")
+            self.fichier.write(".l"+str(current_loop[1])+" ;end loop\n")
             self.loop.pop()
 
         if noeud.type == "noeud_appel_fonction":
