@@ -16,3 +16,13 @@ function print(y){
 	send 10;
 }
 
+function scan(){
+	var i;
+	var j;
+	i = recv; j = 0;
+	while (i != 10) {
+		j = j * 10 + (i - 48);
+		i = recv;
+	}
+	return j;
+}

@@ -106,8 +106,8 @@ class Syntax(object):
             for expression in listeArg:
                 B.ajouterFils(expression)
             B.ajouterFils(I)
-            #TODO changer cst 2 avec le vrai nombre de variable declaré
-            A = arbre("noeud_function",name,2,nbArg)
+            
+            A = arbre(type="noeud_function",valeur=name,args=nbArg)
             A.ajouterFils(B)
 
         elif self.lexical.next()["type"] == "tok_break":
@@ -221,6 +221,11 @@ class Syntax(object):
             else:
                 A = arbre("noeud_variable",name )
 
+            return A
+
+        if(self.lexical.next()['type'] == "tok_recv"):
+            A = arbre('noeud_recv')
+            self.lexical.skip()
             return A
 
     def fonction(self):

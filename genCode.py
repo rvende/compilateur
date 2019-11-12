@@ -16,6 +16,7 @@ class GenerationCode(object):
         self.fichier.write(".start\n")
         self.fichier.write("prep main\n")
         self.fichier.write("call 0\n")
+        #self.fichier.write("dbg \n")
         self.fichier.write("halt\n")
         self.fichier.close()
 
@@ -121,6 +122,9 @@ class GenerationCode(object):
         if noeud.type == "noeud_send":
             self.genCode(noeud.fils[0])
             self.fichier.write("send \n")
+
+        if noeud.type == "noeud_recv":
+            self.fichier.write("recv \n")
 
 
 
