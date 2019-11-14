@@ -127,9 +127,9 @@ class Syntax(object):
             T = self.expression(0)
             C.ajouterFils(T)#on ajoute la partie de test a l'arbre
             self.lexical.accept("tok_parenthese_fermante")
-            #on passe maintenant à la partie du bloc
+            #on passe maintenant a la partie du bloc
             B = self.instruction() #on construit le bloc
-            C.ajouterFils(B) #on ajoute le bloc à l'arbre
+            C.ajouterFils(B) #on ajoute le bloc a l'arbre
             br = arbre("noeud_break")
             C.ajouterFils(br)
             A.ajouterFils(C)
@@ -195,7 +195,7 @@ class Syntax(object):
             A = self.expression(0)
             self.lexical.accept("tok_parenthese_fermante")
             return A
-        #Opération unaire
+        #Operation unaire
         if(self.lexical.next()['type'] == "tok_moins"):
             self.lexical.skip()
             A = arbre("noeud_moins_unaire")

@@ -15,7 +15,7 @@ class Analyse_semantique(object):
 
     def declarer(self,nom_ident):
         if nom_ident in self.pile[-1].keys():
-            raise RedefinedException("Erreur: Variable déjà déclarée")
+            raise RedefinedException("Erreur: Variable deja declaree")
         else:
             self.pile[-1][nom_ident] = {"id": nom_ident}
             return self.pile[-1][nom_ident]
@@ -28,7 +28,7 @@ class Analyse_semantique(object):
                 return self.pile[i].get(nom_ident)
             else:
                 i -= 1
-        raise UndefinedException("Erreur: Variable non déclarée")
+        raise UndefinedException("Erreur: Variable non declaree")
 
     def analyse(self, noeud):
         if noeud.type == "noeud_bloc":

@@ -25,13 +25,13 @@ class GenerationCode(object):
         if noeud.type == "noeud_constante":
             self.fichier.write("push "+str(noeud.valeur)+"\n")
 
-        # Opérateur binaire
+        # Operateur binaire
         if noeud.type in self.syntax.op_binaire.keys():
             self.genCode(noeud.fils[0])
             self.genCode(noeud.fils[1])
             self.fichier.write(self.syntax.op_binaire[noeud.type]+"\n")
 
-        # Opérateur unaire
+        # Operateur unaire
         if noeud.type in self.syntax.op_unaire.keys():
             self.fichier.write("push 0\n")
             self.genCode(noeud.fils[0])
@@ -39,7 +39,7 @@ class GenerationCode(object):
 
         # Autre
         if noeud.type == "noeud_puissance":
-            raise GenCodeException("Erreur: noeud_puissance non implémenté.")
+            raise GenCodeException("Erreur: noeud_puissance non implemente.")
 
 
         if noeud.type == "noeud_affectation":
@@ -90,7 +90,7 @@ class GenerationCode(object):
 
         if noeud.type == "noeud_loop":
             self.cpt += 1
-            # stockage des labels de début et fin de loop dans un tuple: (debut,fin)
+            # stockage des labels de debut et fin de loop dans un tuple: (debut,fin)
             self.loop.append((self.cpt,self.cpt+1))
             self.cpt += 1
             current_loop = self.loop[-1]

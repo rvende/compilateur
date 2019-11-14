@@ -35,7 +35,7 @@ class Lexical():
         if(self.next()['type'] == t):
             self.skip()
         else:
-            raise Exception("Erreur: fonction accept, type différent")
+            raise Exception("Erreur: fonction accept, type different")
 
     def main(self):
         while(True):
