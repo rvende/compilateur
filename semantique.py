@@ -50,6 +50,12 @@ class Analyse_semantique(object):
             for enfant in noeud.fils:
                 self.analyse(enfant)
             noeud.slot = self.nbVariable
+        elif noeud.type == "noeud_affectation":
+            if noeud.fils[0].type != "noeud_variable":
+                raise UnexpectedException("Erreur: Variable atttendu lors de l'affectation")
+            else:
+                for enfant in noeud.fils:
+                    self.analyse(enfant)
         else:
             for enfant in noeud.fils:
                 self.analyse(enfant)
