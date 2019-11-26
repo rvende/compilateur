@@ -1,15 +1,1 @@
-function somme(n){ 
-	if(n<=0){ 
-		return 2; 
-	}else{ 
-		return n + somme(n-1); 
-	} 
-} 
-
-function main() { 
-	var a; 
-	a = 2; 
-	3+ a = a+ somme(22); 
-	print(a); 
-	return 0;
-}
+function main() { var a; a = 4; { var b; b = a+3; print(b);}{ var a; a = 3; var b; b = 5; print(a+b);} print(a);}
