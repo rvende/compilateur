@@ -31,7 +31,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "chmod +x ./msm.sh && ./msm.sh"
+		bashCommand = "chmod +x ./msm/msm && ./msm/msm genCode"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"257\n")

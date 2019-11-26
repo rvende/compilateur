@@ -5,5 +5,5 @@ install:
  - pip install -r requirements.txt
 
 script:
- - chmod +x ./msm.sh && ./msm.sh
+ - chmod +x ./msm/msm && ./msm/msm genCode
  - coverage run -m unittest discover
