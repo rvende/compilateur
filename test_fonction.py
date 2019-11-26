@@ -31,7 +31,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "chmod +x ./msm.sh"
+		bashCommand = "chmod +x ./msm.sh && ./msm.sh"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"257\n")
@@ -89,7 +89,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "chmod +x ./msm.sh"
+		bashCommand = "chmod +x ./msm.sh && ./msm.sh"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"218\n")
