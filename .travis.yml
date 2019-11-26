@@ -6,4 +6,5 @@ install:
 before_script:
  - chmod +x msm.sh
 script:
+ - msm.sh
  - coverage run -m unittest discover
