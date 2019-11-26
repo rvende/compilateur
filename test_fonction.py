@@ -31,7 +31,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "./msm/msm genCode"
+		bashCommand = "msm/msm genCode"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"257\n")
@@ -60,7 +60,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "./msm/msm genCode"
+		bashCommand = "msm/msm genCode"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"1020\n")
@@ -89,7 +89,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "./msm/msm genCode"
+		bashCommand = "msm/msm genCode"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"218\n")
@@ -147,7 +147,7 @@ class Test_Fonction(unittest.TestCase):
 			semantique.analyse(arbre)
 		generationCode = GenerationCode(syntax)
 		generationCode.lancementGenerationCode(liste_arbre)
-		bashCommand = "./msm/msm genCode"
+		bashCommand = "msm/msm genCode"
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"7\n8\n4\n")
