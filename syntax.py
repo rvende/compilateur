@@ -66,12 +66,13 @@ class Syntax(object):
 
         elif self.lexical.next()['type'] == "tok_return":
             self.lexical.accept("tok_return")
+            
             A = arbre("noeud_return")
             E = self.expression(0)
             A.ajouterFils(E)
             self.lexical.accept("tok_point_virgule")
             if self.lexical.next()['type'] != "tok_accolade_fermante":
-                warnings.warn("(W) Warning ! Du code a ete ecrit apres le return")
+                warnings.warn("l:"+str(self.lexical.next()['ligne']-28)+",(W) Warning ! Du code a ete ecrit apres le return")
 
 
         elif self.lexical.next()['type'] == "tok_accolade_ouvrante":
