@@ -25,4 +25,12 @@ function scan(){
 		i = recv;
 	}
 	return j;
-}function main() { var a; a = 4; { var b; b = a+3; print(b);}{ var a; a = 3; var b; b = 5; print(a+b);} print(a);}
+}function main() { 
+	var a; 
+	a = 4; 
+	var b;
+	b = 5;
+	print(a);
+	return 0;
+	print(b);
+}

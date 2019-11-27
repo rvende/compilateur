@@ -1,5 +1,6 @@
 from lexical import *
 from arbre import *
+import warnings
 
 
 
@@ -69,6 +70,9 @@ class Syntax(object):
             E = self.expression(0)
             A.ajouterFils(E)
             self.lexical.accept("tok_point_virgule")
+            if self.lexical.next()['type'] != "tok_accolade_fermante":
+                warnings.warn("(W) Warning ! Du code a ete ecrit apres le return")
+
 
         elif self.lexical.next()['type'] == "tok_accolade_ouvrante":
             self.lexical.accept("tok_accolade_ouvrante")
