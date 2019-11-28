@@ -7,7 +7,9 @@ class Lexical():
     def __init__(self, fichier):
         self.fichier = open(fichier,"r")
         self.les_tokens = []
-        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while"}
+
+        self.mot_cles = {"if":"tok_if", "else":"tok_else", "for":"tok_for", "var":"tok_var", "while":"tok_while","function":"tok_function","return":"tok_return", "break":"tok_break",\
+                        "continue": "tok_continue","send":"tok_send","recv":"tok_recv"}
         self.operateur_binaire = {"+":"tok_plus", "-":"tok_moins", "*":"tok_multiplication", "/":"tok_division",\
                                   "^":"tok_puissance", "%":"tok_modulo", "&":"tok_et", "|":"tok_ou"}
         self.ponctuaction = {"(":"tok_parenthese_ouvrante", ")":"tok_parenthese_fermante",\
@@ -33,7 +35,7 @@ class Lexical():
         if(self.next()['type'] == t):
             self.skip()
         else:
-            raise Exception("Erreur: fonction accept, type différent")
+            raise Exception("Erreur: fonction accept, type different")
 
     def main(self):
         while(True):
@@ -42,7 +44,7 @@ class Lexical():
                     self.index_token = 0
                     break
             if self.num_lettre < len(self.content):
-                if self.content[self.num_lettre] != " " and self.content[self.num_lettre] != "\n":
+                if self.content[self.num_lettre] != " " and self.content[self.num_lettre] != "\n" and self.content[self.num_lettre] != "\t" :
                     self.tokens(self.content[self.num_lettre])
                     self.skip()
                 else:
@@ -62,8 +64,6 @@ class Lexical():
 
 
     def tokens(self, c):
-        print(c)
-        print(self.comparaison.keys())
         if c in self.operateur_binaire.keys():
             self.les_tokens.append({'type': self.operateur_binaire[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1

@@ -1,5 +1,6 @@
 from lexical import *
 from arbre import *
+import warnings
 
 
 
@@ -63,6 +64,17 @@ class Syntax(object):
             self.lexical.skip()
             self.lexical.accept("tok_point_virgule")
 
+        elif self.lexical.next()['type'] == "tok_return":
+            self.lexical.accept("tok_return")
+            
+            A = arbre("noeud_return")
+            E = self.expression(0)
+            A.ajouterFils(E)
+            self.lexical.accept("tok_point_virgule")
+            if self.lexical.next()['type'] != "tok_accolade_fermante":
+                warnings.warn("l:"+str(self.lexical.next()['ligne']-28)+",(W) Warning ! Du code a ete ecrit apres le return")
+
+
         elif self.lexical.next()['type'] == "tok_accolade_ouvrante":
             self.lexical.accept("tok_accolade_ouvrante")
             A = arbre("noeud_bloc")
@@ -70,7 +82,47 @@ class Syntax(object):
                 x = self.instruction()
                 A.ajouterFils(x)
             self.lexical.accept("tok_accolade_fermante")
-        #Code boucle WHILE TODO RPP Warren
+
+        elif self.lexical.next()['type'] == "tok_function":
+            self.lexical.accept("tok_function")
+            name = self.lexical.next()['name']
+            self.lexical.skip()
+            self.lexical.accept("tok_parenthese_ouvrante")
+            nbArg = 0
+            listeArg = []
+            while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                nbArg += 1
+
+                E = arbre("noeud_declaration",self.lexical.next()['name'])
+                
+                listeArg.append(E)
+                self.lexical.skip()
+
+                if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                    self.lexical.accept("tok_virgule")
+
+            self.lexical.accept("tok_parenthese_fermante")
+
+
+
+            B = arbre("noeud_bloc")
+
+            I = self.instruction()
+            for expression in listeArg:
+                B.ajouterFils(expression)
+            B.ajouterFils(I)
+            
+            A = arbre(type="noeud_function",valeur=name,args=nbArg)
+            A.ajouterFils(B)
+
+        elif self.lexical.next()["type"] == "tok_break":
+            self.lexical.accept("tok_break")
+            self.lexical.accept("tok_point_virgule")
+            A = arbre("noeud_break")
+        elif self.lexical.next()["type"] == "tok_continue":
+            self.lexical.accept("tok_continue")
+            self.lexical.accept("tok_point_virgule")
+            A = arbre("noeud_continue")
         elif self.lexical.next()['type'] == "tok_while":
             self.lexical.accept("tok_while")
             A = arbre("noeud_loop")
@@ -80,9 +132,9 @@ class Syntax(object):
             T = self.expression(0)
             C.ajouterFils(T)#on ajoute la partie de test a l'arbre
             self.lexical.accept("tok_parenthese_fermante")
-            #on passe maintenant à la partie du bloc
+            #on passe maintenant a la partie du bloc
             B = self.instruction() #on construit le bloc
-            C.ajouterFils(B) #on ajoute le bloc à l'arbre
+            C.ajouterFils(B) #on ajoute le bloc a l'arbre
             br = arbre("noeud_break")
             C.ajouterFils(br)
             A.ajouterFils(C)
@@ -93,10 +145,12 @@ class Syntax(object):
             initialisation = self.instruction()
             test = self.expression(0)
             self.lexical.accept("tok_point_virgule")
-            incrementation = self.instruction()
+            incrementation = self.expression(0)
+            noeud_incrementation = arbre("noeud_expression")
+            noeud_incrementation.ajouterFils(incrementation)
             self.lexical.accept("tok_parenthese_fermante")
             Bloc = self.instruction()
-            Bloc.ajouterFils(incrementation) 
+            Bloc.ajouterFils(noeud_incrementation)
             A.ajouterFils(initialisation)
             L = arbre("noeud_loop")
             A.ajouterFils(L)
@@ -106,6 +160,12 @@ class Syntax(object):
             C.ajouterFils(test)
             C.ajouterFils(Bloc)
             C.ajouterFils(br)
+        elif self.lexical.next()["type"] == "tok_send":
+            self.lexical.accept("tok_send")
+            A = arbre("noeud_send")
+            E = self.expression(0)
+            A.ajouterFils(E)
+            self.lexical.accept("tok_point_virgule")
 
         else:
             E = self.expression(0)
@@ -140,7 +200,7 @@ class Syntax(object):
             A = self.expression(0)
             self.lexical.accept("tok_parenthese_fermante")
             return A
-        #Opération unaire
+        #Operation unaire
         if(self.lexical.next()['type'] == "tok_moins"):
             self.lexical.skip()
             A = arbre("noeud_moins_unaire")
@@ -152,9 +212,53 @@ class Syntax(object):
             A.ajouterFils(self.expression(self.tableauPriorite['tok_puissance']['priorite']))
             return A
         if(self.lexical.next()['type'] == "tok_identificateur"):
-            A = arbre("noeud_variable", self.lexical.next()['name'])
+            name = self.lexical.next()['name']
+            self.lexical.skip()
+            if self.lexical.next()['type'] == "tok_parenthese_ouvrante":
+                A = arbre("noeud_appel_fonction",name)
+                self.lexical.accept("tok_parenthese_ouvrante")
+                while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                    E = self.expression(0)
+                    A.ajouterFils(E)
+                    if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                        self.lexical.accept("tok_virgule")
+                self.lexical.accept("tok_parenthese_fermante")
+            else:
+                A = arbre("noeud_variable",name )
+
+            return A
+
+        if(self.lexical.next()['type'] == "tok_recv"):
+            A = arbre('noeud_recv')
             self.lexical.skip()
             return A
+
+    def fonction(self):
+        self.lexical.accept("tok_function")
+        name = self.lexical.next()['name']
+        self.lexical.skip()
+        self.lexical.accept("tok_parenthese_ouvrante")
+        nbArg = 0
+        listeArg = []
+        while(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+            nbArg += 1
+            E = arbre("noeud_declaration",self.lexical.next()['name'])
+            listeArg.append(E)
+            self.lexical.skip()
+
+            if(self.lexical.next()['type'] != "tok_parenthese_fermante"):
+                self.lexical.accept("tok_virgule")
+        self.lexical.accept("tok_parenthese_fermante")
+        B = arbre("noeud_bloc")
+
+        I = self.instruction()
+        for expression in listeArg:
+            B.ajouterFils(expression)
+        B.ajouterFils(I)
+        A = arbre("noeud_function",name,2,nbArg)
+        A.ajouterFils(B)
+        return A
+
 
 class SyntaxException(Exception):
     """docstring for SyntaxException"""

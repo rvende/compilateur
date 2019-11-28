@@ -15,7 +15,7 @@ class Analyse_semantique(object):
 
     def declarer(self,nom_ident):
         if nom_ident in self.pile[-1].keys():
-            raise RedefinedException("Erreur: Variable déjà déclarée")
+            raise RedefinedException("Erreur: Variable deja declaree")
         else:
             self.pile[-1][nom_ident] = {"id": nom_ident}
             return self.pile[-1][nom_ident]
@@ -28,7 +28,7 @@ class Analyse_semantique(object):
                 return self.pile[i].get(nom_ident)
             else:
                 i -= 1
-        raise UndefinedException("Erreur: Variable non déclarée")
+        raise UndefinedException("Erreur: Variable non declaree")
 
     def analyse(self, noeud):
         if noeud.type == "noeud_bloc":
@@ -46,6 +46,16 @@ class Analyse_semantique(object):
             if(S['type'] != "variable"):
                 raise UnexpectedException("Erreur: Variable atttendu")
             noeud.slot = S['slot']
+        elif noeud.type == "noeud_function":
+            for enfant in noeud.fils:
+                self.analyse(enfant)
+            noeud.slot = self.nbVariable
+        elif noeud.type == "noeud_affectation":
+            if noeud.fils[0].type != "noeud_variable":
+                raise UnexpectedException("Erreur: Variable atttendu lors de l'affectation")
+            else:
+                for enfant in noeud.fils:
+                    self.analyse(enfant)
         else:
             for enfant in noeud.fils:
                 self.analyse(enfant)
