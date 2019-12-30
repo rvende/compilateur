@@ -9,8 +9,13 @@ function printx(x){
 
 function print(y){
 	if(y == 0){
-		send 40;
-	}else{
+		send 48;
+	}
+	if(y < 0){
+		send 45;
+		printx(-y);
+	}
+	if(y> 0){
 		printx(y);
 	}
 	send 10;
@@ -25,12 +30,30 @@ function scan(){
 		i = recv;
 	}
 	return j;
-}function main() { 
-	var a; 
-	a = 4; 
-	var b;
-	b = 5;
-	print(a);
+}
+
+function puissance(a,b){
+	var c;
+	c = 1;
+	var i;
+	for(i=0;i<10;i = i+1){
+		c = c*a;
+	}
+	return c;
+}
+function main() { 
+	
+	
+
+	var a;
+	a = 2;
+
+	if(a != 5){
+		print(1);
+	}else{
+		print(2);
+	}
+
+
 	return 0;
-	print(b);
 }

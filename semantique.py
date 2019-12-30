@@ -28,7 +28,7 @@ class Analyse_semantique(object):
                 return self.pile[i].get(nom_ident)
             else:
                 i -= 1
-        raise UndefinedException("Erreur: Variable non declaree")
+        raise UndefinedException("Erreur: '" + nom_ident+"' cette variable n'est pas declaree")
 
     def analyse(self, noeud):
         if noeud.type == "noeud_bloc":

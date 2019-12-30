@@ -72,7 +72,7 @@ class Syntax(object):
             A.ajouterFils(E)
             self.lexical.accept("tok_point_virgule")
             if self.lexical.next()['type'] != "tok_accolade_fermante":
-                warnings.warn("l:"+str(self.lexical.next()['ligne']-28)+",(W) Warning ! Du code a ete ecrit apres le return")
+                warnings.warn("l:"+str(self.lexical.next()['ligne']-38)+",(W) Warning ! Du code a ete ecrit apres le return")
 
 
         elif self.lexical.next()['type'] == "tok_accolade_ouvrante":
