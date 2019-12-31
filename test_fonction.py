@@ -35,7 +35,7 @@ class Test_Fonction(unittest.TestCase):
 		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"257\n")
-		
+
 	def test_fonction_recursive_deux_arg(self):
 		f = open("test.c","w+")
 
@@ -180,6 +180,33 @@ class Test_Fonction(unittest.TestCase):
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"-51\n")
 
+	def test_break_else(self):
+		f = open("test.c","w+")
+		f.write("function main() {var x;var i;x = 2;for(i = 0; i < 5; i = i + 1){if(x<5){x = x + 1;print(1);}else{break;} }print(3);return 0;}")
+		f = f.close()
+		filenames = ['bibliotheque_standard.c', "test.c"]
+
+		with open("main.c","w") as outfile:
+			for fname in filenames:
+				with open(fname) as infile:
+					for line in infile:
+						outfile.write(line)
+			outfile.close()
+		lexical = Lexical("main.c")
+		lexical.main()
+		liste_arbre = []
+		while lexical.next()['type'] != "tok_EOF":
+			syntax = Syntax(lexical)
+			arbre = syntax.fonction()
+			liste_arbre.append(arbre)
+			semantique = Analyse_semantique()
+			semantique.analyse(arbre)
+		generationCode = GenerationCode(syntax)
+		generationCode.lancementGenerationCode(liste_arbre)
+		bashCommand = "./msm/msm genCode"
+		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
+		output,error = process.communicate()
+		self.assertEqual(output.decode('utf8'),"1\n1\n1\n3\n")
 
 if __name__ == '__main__':
     unittest.main()

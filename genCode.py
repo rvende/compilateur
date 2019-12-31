@@ -65,8 +65,13 @@ class GenerationCode(object):
             self.fichier.write("jumpf l"+str(memory_false)+" ;jump cond false \n")
             self.genCode(noeud.fils[1])
             self.cpt += 1
-            if len(noeud.fils) > 2 and noeud.fils[2].type=="noeud_break": #si il y a un break sur la cond
-                self.fichier.write("jump l"+str(self.cpt)+" ;jump label loop\n")
+            if len(noeud.fils) > 2:
+                if noeud.fils[2].type=="noeud_break": #si il y a un break sur la cond (on est dans une boucle for)
+                    self.fichier.write("jump l"+str(self.cpt)+" ;jump label loop\n")
+                if noeud.fils[2].type=="noeud_bloc": #on a un bloc else dans la cond
+                    self.cpt += 1
+                    memory_else = self.cpt
+                    self.fichier.write("jump l"+str(self.cpt)+" ;jump label fin else\n")
             self.fichier.write(".l"+str(memory_false)+" ;label break\n")
             if len(noeud.fils) > 2: #si il y a un break sur la cond
                 if noeud.fils[2].type == "noeud_break":
@@ -74,6 +79,7 @@ class GenerationCode(object):
                     self.fichier.write(".l"+str(self.cpt)+" ;label loop "+str(noeud.type)+"\n")
                 else:
                     self.genCode(noeud.fils[2])
+                    self.fichier.write(".l"+str(memory_else)+" ;label after else \n")
 
 
         if noeud.type == "noeud_break":

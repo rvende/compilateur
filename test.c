@@ -1,17 +1,1 @@
-
-function main() { 
-	
-	
-
-	var a;
-	a = 2;
-
-	if(a != 5){
-		print(1);
-	}else{
-		print(2);
-	}
-
-
-	return 0;
-}
+function main() { var a; a = 4; { var b; b = a+3; print(b);}{ var a; a = 3; var b; b = 5; print(a+b);} print(a);}
