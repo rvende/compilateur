@@ -10,14 +10,15 @@ function printx(x){
 function print(y){
 	if(y == 0){
 		send 48;
+	}else{
+		if(y < 0){
+			send 45;
+			printx(-y);
+		}else{
+			printx(y);
+		}
 	}
-	if(y < 0){
-		send 45;
-		printx(-y);
-	}
-	if(y> 0){
-		printx(y);
-	}
+	
 	send 10;
 }
 

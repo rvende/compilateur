@@ -139,4 +139,5 @@ class GenerationCode(object):
 class GenCodeException(Exception):
     """docstring for SyntaxException"""
     def __init__(self, message):
-        super().__init__(message)
+        self.msg = message
+        super(GenCodeException,self).__init__(self.msg)

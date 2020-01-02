@@ -10,14 +10,15 @@ function printx(x){
 function print(y){
 	if(y == 0){
 		send 48;
+	}else{
+		if(y < 0){
+			send 45;
+			printx(-y);
+		}else{
+			printx(y);
+		}
 	}
-	if(y < 0){
-		send 45;
-		printx(-y);
-	}
-	if(y> 0){
-		printx(y);
-	}
+	
 	send 10;
 }
 
@@ -40,4 +41,4 @@ function puissance(a,b){
 		c = c*a;
 	}
 	return c;
-}function main() { var a; a = 4; { var b; b = a+3; print(b);}{ var a; a = 3; var b; b = 5; print(a+b);} print(a);}
+}function main() { continue; print(32); return 0;}

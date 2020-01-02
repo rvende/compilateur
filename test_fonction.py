@@ -208,5 +208,127 @@ class Test_Fonction(unittest.TestCase):
 		output,error = process.communicate()
 		self.assertEqual(output.decode('utf8'),"1\n1\n1\n3\n")
 
+
+	def test_boucle_for(self):
+		f = open("test.c","w+")
+		f.write("function main() { var i; for(i=0;i<5;i=i+1){ print(i); } return 0;}")
+		f = f.close()
+		filenames = ['bibliotheque_standard.c', "test.c"]
+
+		with open("main.c","w") as outfile:
+			for fname in filenames:
+				with open(fname) as infile:
+					for line in infile:
+						outfile.write(line)
+			outfile.close()
+		lexical = Lexical("main.c")
+		lexical.main()
+		liste_arbre = []
+		while lexical.next()['type'] != "tok_EOF":
+			syntax = Syntax(lexical)
+			arbre = syntax.fonction()
+			liste_arbre.append(arbre)
+			semantique = Analyse_semantique()
+			semantique.analyse(arbre)
+		generationCode = GenerationCode(syntax)
+		generationCode.lancementGenerationCode(liste_arbre)
+		bashCommand = "./msm/msm genCode"
+		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
+		output,error = process.communicate()
+		self.assertEqual(output.decode('utf8'),"0\n1\n2\n3\n4\n")
+
+
+	def test_boucle_while(self):
+		f = open("test.c","w+")
+		f.write("function main() { var i; while(i<5){ print(i); i = i+1; } return 0;}")
+		f = f.close()
+		filenames = ['bibliotheque_standard.c', "test.c"]
+
+		with open("main.c","w") as outfile:
+			for fname in filenames:
+				with open(fname) as infile:
+					for line in infile:
+						outfile.write(line)
+			outfile.close()
+		lexical = Lexical("main.c")
+		lexical.main()
+		liste_arbre = []
+		while lexical.next()['type'] != "tok_EOF":
+			syntax = Syntax(lexical)
+			arbre = syntax.fonction()
+			liste_arbre.append(arbre)
+			semantique = Analyse_semantique()
+			semantique.analyse(arbre)
+		generationCode = GenerationCode(syntax)
+		generationCode.lancementGenerationCode(liste_arbre)
+		bashCommand = "./msm/msm genCode"
+		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
+		output,error = process.communicate()
+		self.assertEqual(output.decode('utf8'),"0\n1\n2\n3\n4\n")
+
+
+
+	def test_boucle_while_boucle_for_break(self):
+		f = open("test.c","w+")
+		f.write("function main() { var i; while(i<5){ print(i); if(i == 3){ var j; for(j=3;j>=0;j = j-1){ print(j);} break; }else{ i = i+1;} } return 0;}")
+		f = f.close()
+		filenames = ['bibliotheque_standard.c', "test.c"]
+
+		with open("main.c","w") as outfile:
+			for fname in filenames:
+				with open(fname) as infile:
+					for line in infile:
+						outfile.write(line)
+			outfile.close()
+		lexical = Lexical("main.c")
+		lexical.main()
+		liste_arbre = []
+		while lexical.next()['type'] != "tok_EOF":
+			syntax = Syntax(lexical)
+			arbre = syntax.fonction()
+			liste_arbre.append(arbre)
+			semantique = Analyse_semantique()
+			semantique.analyse(arbre)
+		generationCode = GenerationCode(syntax)
+		generationCode.lancementGenerationCode(liste_arbre)
+		bashCommand = "./msm/msm genCode"
+		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
+		output,error = process.communicate()
+		self.assertEqual(output.decode('utf8'),"0\n1\n2\n3\n3\n2\n1\n0\n")
+
+
+
+	def test_boucle_while_boucle_for_break_continue(self):
+		f = open("test.c","w+")
+		f.write("function main() { var i; while(i<5){ print(i); if(i == 4){ var j; for(j=3;j>=0;j = j-1){ print(j); } break; }else{ if(i == 2){ i= i+2; continue; } i = i+1; } } return 0;}")
+		f = f.close()
+		filenames = ['bibliotheque_standard.c', "test.c"]
+
+		with open("main.c","w") as outfile:
+			for fname in filenames:
+				with open(fname) as infile:
+					for line in infile:
+						outfile.write(line)
+			outfile.close()
+		lexical = Lexical("main.c")
+		lexical.main()
+		liste_arbre = []
+		while lexical.next()['type'] != "tok_EOF":
+			syntax = Syntax(lexical)
+			arbre = syntax.fonction()
+			liste_arbre.append(arbre)
+			semantique = Analyse_semantique()
+			semantique.analyse(arbre)
+		generationCode = GenerationCode(syntax)
+		generationCode.lancementGenerationCode(liste_arbre)
+		bashCommand = "./msm/msm genCode"
+		process = subprocess.Popen(bashCommand.split(),stdout=subprocess.PIPE)
+		output,error = process.communicate()
+		self.assertEqual(output.decode('utf8'),"0\n1\n2\n4\n3\n2\n1\n0\n")
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
