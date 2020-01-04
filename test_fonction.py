@@ -300,7 +300,7 @@ class Test_Fonction(unittest.TestCase):
 
 	def test_boucle_while_boucle_for_break_continue(self):
 		f = open("test.c","w+")
-		f.write("function main() { var i; while(i<5){ print(i); if(i == 4){ var j; for(j=3;j>=0;j = j-1){ print(j); } break; }else{ if(i == 2){ i= i+2; continue; } i = i+1; } } return 0;}")
+		f.write("function main() { var i; while(i<5){ print(i); if(i == 4){ var j; for(j=3;j>=0;j = j-1){ print(j); } /* break*/ break; }else{ if(i == 2){ i= i+2; continue; } i = i+1; } } return 0;}")
 		f = f.close()
 		filenames = ['bibliotheque_standard.c', "test.c"]
 

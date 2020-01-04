@@ -41,4 +41,20 @@ function puissance(a,b){
 		c = c*a;
 	}
 	return c;
-}function main() { continue; print(32); return 0;}
+}function main() { 
+	//continue 
+	var a;
+
+	a = 8;
+
+	a = a/4;
+
+	print(a);
+
+	/*
+		programme affichant 2
+
+	*/
+
+	return 0;
+}

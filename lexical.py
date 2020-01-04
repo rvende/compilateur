@@ -45,8 +45,28 @@ class Lexical():
                     break
             if self.num_lettre < len(self.content):
                 if self.content[self.num_lettre] != " " and self.content[self.num_lettre] != "\n" and self.content[self.num_lettre] != "\t" :
-                    self.tokens(self.content[self.num_lettre])
-                    self.skip()
+                    if self.content[self.num_lettre] == "/" and self.content[self.num_lettre+1] == "/":
+                        self.num_lettre += 2
+                        while self.content[self.num_lettre] != "\n":
+                            self.num_lettre += 1
+                            self.num_col = 1
+                        self.num_lig += 1
+                    elif self.content[self.num_lettre] == "/" and self.content[self.num_lettre+1] == "*":
+                        #self.num_lettre += 2
+                        while self.num_lettre < len(self.content):
+
+                            if self.content[self.num_lettre] == "*" and self.content[self.num_lettre+1] == "/":
+                                self.num_lettre += 2
+                                break
+                            if self.content[self.num_lettre] == "\n":
+                                self.num_col = 1
+                                self.num_lig += 1
+                            if self.content[self.num_lettre]:
+                                self.num_col += 1
+                                self.num_lettre += 1
+                    else:
+                        self.tokens(self.content[self.num_lettre])
+                        self.skip()
                 else:
                     if self.content[self.num_lettre] == "\n":
                         self.num_lig += 1
