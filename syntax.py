@@ -42,9 +42,17 @@ class Syntax(object):
         self.lexical = lexical
 
     def chercherOp(self, token):
+        """
+        Fonction qui permet de récupérer les informations d'un token
+        opération dans le dictionnaire tableauPriorite.
+        Paramètre: token: une string donnant le type du token
+        """
         return self.tableauPriorite.get(token['type'],None)
 
     def instruction(self):
+        """
+        Fonction qui permet de transformer une instruction en un arbre.
+        """
         if self.lexical.next()['type'] == "tok_if":
             self.lexical.skip()
             self.lexical.accept("tok_parenthese_ouvrante")
@@ -66,7 +74,7 @@ class Syntax(object):
 
         elif self.lexical.next()['type'] == "tok_return":
             self.lexical.accept("tok_return")
-            
+
             A = arbre("noeud_return")
             E = self.expression(0)
             A.ajouterFils(E)
@@ -94,7 +102,7 @@ class Syntax(object):
                 nbArg += 1
 
                 E = arbre("noeud_declaration",self.lexical.next()['name'])
-                
+
                 listeArg.append(E)
                 self.lexical.skip()
 
@@ -111,7 +119,7 @@ class Syntax(object):
             for expression in listeArg:
                 B.ajouterFils(expression)
             B.ajouterFils(I)
-            
+
             A = arbre(type="noeud_function",valeur=name,args=nbArg)
             A.ajouterFils(B)
 
@@ -175,6 +183,11 @@ class Syntax(object):
         return A
 
     def expression(self, p):
+        """
+        Fonction qui permet de transformer une expression en arbre en prenant
+        en compte les priorités et associativités.
+        Paramètre: p: un int indiquant la priorite
+        """
         A1 = self.primaire()
         while True:
             op = self.chercherOp(self.lexical.next())
@@ -189,6 +202,9 @@ class Syntax(object):
 
 
     def primaire(self):
+        """
+        Fonction qui permet de transformer les types primitifs en noeud.
+        """
         if(self.lexical.next() is None):
             self.lexical.skip()
         if(self.lexical.next()['type'] == "tok_constante"):
@@ -234,6 +250,9 @@ class Syntax(object):
             return A
 
     def fonction(self):
+        """
+        Fonction qui permet de transformer une fonction en arbre.
+        """
         self.lexical.accept("tok_function")
         name = self.lexical.next()['name']
         self.lexical.skip()

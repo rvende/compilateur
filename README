@@ -8,28 +8,13 @@
 Version: Python3
 Commande de lancement: python3 main.py NomDeFichier
 
-Fonctionnalités inclusent:
-- Traitement des lignes présentent dans un fichier
-- Identification des tokens
-- Traitement des primaires
-- Gestion des parenthèses
-- Traitement des expressions : !=,+, -, *, /, %, ^
-- Gestion des boucles conditionnelles : if, else, for, while
-- Gestion des expressions : = 
-- Gestion de type : var
-
-
-Fonctionnalités manquantes :
-- Opérateurs binaire :  & , |
-
-
 Pour lancer les tests unitaires (attention les tests modifies le fichier test.c): python3 test_unitaire.py
 
 *************Syntaxe des boucles*************
 
 nb : pour les boucles comme pour tout le reste du code nous ne pouvons pas utiliser : "i++"
 
-----While: 
+----While:
 
 while(<test>){
   <chose à faire>
@@ -53,7 +38,7 @@ for(<initialisation>;<test>;<incrementation>;){
 var a;
 a = 0;
 var i;
-for(i = 0; i < 10; i = i + 1;){
+for(i = 0; i < 10; i = i + 1){
   a = a + i;
 }
 

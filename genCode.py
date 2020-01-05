@@ -11,6 +11,11 @@ class GenerationCode(object):
 
 
     def lancementGenerationCode(self, liste_noeud):
+        """
+        Permet de lancer la génération du code associé à chaque noeud de la liste
+        liste_noeud.
+        Paramètre: liste_noeud: une liste de string donnant le type de noeud
+        """
         for noeud in liste_noeud:
             self.genCode(noeud)
         self.fichier.write(".start\n")
@@ -21,6 +26,10 @@ class GenerationCode(object):
         self.fichier.close()
 
     def genCode(self, noeud):
+        """
+        Fonction qui permet la génération du code d'un noeud.
+        Paramètre: noeud: une string donnant le type du noeud
+        """
         # Constante
         if noeud.type == "noeud_constante":
             self.fichier.write("push "+str(noeud.valeur)+"\n")

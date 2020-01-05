@@ -23,21 +23,36 @@ class Lexical():
         self.num_col = 1
 
     def next(self):
+        """
+        Fonction qui renvois le token en cours de traitement.
+        """
         if self.index_token != -1 and self.index_token < len(self.les_tokens):
             return self.les_tokens[self.index_token]
         else:
             return None
 
     def skip(self):
+        """
+        Fonction qui permet de passer au token suivant.
+        """
         self.index_token = self.index_token + 1
 
     def accept(self, t):
+        """
+        Fonction qui permet de vérifier le type du token en cours de
+        traitement et de passer au suivant si c'est le cas.
+        Paramètre: t: type du token attendu
+        """
         if(self.next()['type'] == t):
             self.skip()
         else:
             raise Exception("Erreur: fonction accept, type different")
 
     def main(self):
+        """
+        Fonction qui permet de faire l'analyse lexical d'un fichier jusqu'à
+        rencontrer le token fin de fichier tok_EOF.
+        """
         while(True):
             if self.next() != None:
                 if self.next()['type'] == "tok_EOF":
@@ -84,6 +99,10 @@ class Lexical():
 
 
     def tokens(self, c):
+        """
+        Fonction qui permet de généré le token associé au caractère passé en paramètre
+        Paramètre: c: un caractère sous forme d'une string
+        """
         if c in self.operateur_binaire.keys():
             self.les_tokens.append({'type': self.operateur_binaire[c], "ligne": self.num_lig, "colonne": self.num_col})
             self.num_lettre += 1
